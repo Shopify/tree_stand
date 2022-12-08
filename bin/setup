@@ -12,8 +12,13 @@ if [[ ! -d tmp/tree-sitter-sql ]]; then
   git -C tmp/ clone --depth=1 https://github.com/DerekStride/tree-sitter-sql.git
 fi
 
-ls tmp/tree-sitter-sql
 cd tmp/tree-sitter-sql
+
+ls
+
+tree-sitter generate
+gcc -shared -o target/parser.so -fPIC src/parser.c -I./src
+
 make compile
 
 cd ../..

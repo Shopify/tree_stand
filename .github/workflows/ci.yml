@@ -33,7 +33,7 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile') }}
           restore-keys: ${{ runner.os }}-gems-
 
-      - run: sudo apt-get install -y libtree-sitter-dev make
+      - run: sudo apt-get install -y libtree-sitter-dev make gcc
       - run: bundle install --jobs=3 --retry=3 --path=vendor/bundle
       - run: bin/setup
       - run: bundle exec rake
