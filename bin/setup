@@ -9,7 +9,7 @@ bundle install
 
 if ! [[ -d tmp/tree-sitter-sql ]]; then
   mkdir -p tmp
-  git -C tmp/ clone --depth=1 git@github.com:DerekStride/tree-sitter-sql.git
+  git -C tmp/ clone --depth=1 https://github.com/DerekStride/tree-sitter-sql.git
 fi
 
 cd tmp/tree-sitter-sql
