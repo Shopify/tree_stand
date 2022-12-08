@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm install tree-sitter
+      - run: npm install tree-sitter-cli
 
       - run: sudo apt-get install -y libtree-sitter-dev make gcc
       - run: bundle install --jobs=3 --retry=3 --path=vendor/bundle

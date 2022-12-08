@@ -14,10 +14,7 @@ fi
 
 cd tmp/tree-sitter-sql
 
-# which tree-sitter
-which tree-sitter-cli
-
-tree-sitter-cli generate
+tree-sitter generate
 gcc -shared -o target/parser.so -fPIC src/parser.c -I./src
 
 make compile
