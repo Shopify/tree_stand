@@ -16,6 +16,9 @@ cd tmp/tree-sitter-sql
 
 npm install
 gcc -shared -o target/parser.so -fPIC src/parser.c -I./src
+ls target
 
 cd ../..
+ls
+mkdir -p parsers
 cp tmp/tree-sitter-sql/target/parser.so parsers/sql.so
