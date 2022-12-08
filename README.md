@@ -1,5 +1,7 @@
 # TreeStand
 
+[![TreeStand](https://github.com/Shopify/tree_stand/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Shopify/tree_stand/actions/workflows/ci.yml)
+
 TODO: Delete this text and describe your gem
 
 ## Installation
