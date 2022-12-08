@@ -18,6 +18,12 @@ jobs:
     name: test (${{ matrix.entry.ruby }})
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/checkout@v3
+        with:
+          name: DerekStride/tree-sitter-sql
+          path: tmp
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.entry.ruby }}
