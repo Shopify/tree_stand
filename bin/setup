@@ -14,10 +14,8 @@ fi
 
 cd tmp/tree-sitter-sql
 
-tree-sitter-cli generate
+npm install
 gcc -shared -o target/parser.so -fPIC src/parser.c -I./src
-
-make compile
 
 cd ../..
 cp tmp/tree-sitter-sql/target/parser.so parsers/sql.so
