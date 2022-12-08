@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install tree-sitter CLI
-        run: sudo apt-get install -y tree-sitter
+        run: sudo apt-get install -y libtree-sitter-dev
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.entry.ruby }}
