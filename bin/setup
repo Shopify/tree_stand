@@ -6,3 +6,14 @@ set -vx
 bundle install
 
 # Do any other automated setup that you need to do here
+
+mkdir tmp
+if ! [[ -d tmp/tree-sitter-sql ]]; then
+  git -C tmp/ clone --depth=1 git@github.com:DerekStride/tree-sitter-sql.git
+fi
+
+cd tmp/tree-sitter-sql
+make compile
+
+cd ../..
+cp tmp/tree-sitter-sql/target/parser.so parsers/sql.so

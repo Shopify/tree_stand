@@ -18,8 +18,6 @@ jobs:
     name: test (${{ matrix.entry.ruby }})
     steps:
       - uses: actions/checkout@v3
-      - name: Install tree-sitter CLI
-        run: sudo apt-get install -y libtree-sitter-dev
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.entry.ruby }}
@@ -28,5 +26,8 @@ jobs:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile') }}
           restore-keys: ${{ runner.os }}-gems-
+
+      - run: sudo apt-get install -y libtree-sitter-dev
       - run: bundle install --jobs=3 --retry=3 --path=vendor/bundle
+      - run: bin/setup
       - run: bundle exec rake
