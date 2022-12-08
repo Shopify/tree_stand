@@ -7,13 +7,12 @@ bundle install
 
 # Do any other automated setup that you need to do here
 
-ls
-ls tmp
 if [[ ! -d tmp/tree-sitter-sql ]]; then
   mkdir -p tmp
   git -C tmp/ clone --depth=1 https://github.com/DerekStride/tree-sitter-sql.git
 fi
 
+ls tmp/tree-sitter-sql
 cd tmp/tree-sitter-sql
 make compile
 
