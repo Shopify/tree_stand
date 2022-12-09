@@ -25,9 +25,9 @@ class AstModifierTest < Minitest::Test
       parent = node.parent
 
       if parent.left == node
-        tree.edit(parent.range, parent.right.text)
+        tree.edit!(parent.range, parent.right.text)
       else
-        tree.edit(parent.range, parent.left.text)
+        tree.edit!(parent.range, parent.left.text)
       end
     end
 

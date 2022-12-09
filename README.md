@@ -2,31 +2,44 @@
 
 [![TreeStand](https://github.com/Shopify/tree_stand/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Shopify/tree_stand/actions/workflows/ci.yml)
 
-TODO: Delete this text and describe your gem
+
+TreeStand is a high-level Ruby wrapper for the [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) bindings. It
+makes it easier to configure the parsers, and work with the underlying syntax tree.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'tree_stand'
+gem "tree_stand"
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install tree_stand
 
 ## Usage
 
-TODO: Write usage instructions here
+### Setting Up a Parser
 
-## Development
+TreeStand do not help with compiling individual parsers. However, once you compile a parser and generate a shared
+object (`.so`) or a dynamic library (`.dylib`) you can tell TreeStand where to find them and pass the parser filename
+to `TreeStand::Parser::new`.
 
-TODO: Write development instructions here
+```ruby
+TreeStand.configure do
+  config.parser_path = "path/to/parser/folder/"
+end
+
+sql_parser = TreeStand::Parser.new("sql")
+ruby_parser = TreeStand::Parser.new("ruby")
+```
+
+
+### API Conventions
+
+TreeStand aims to provide APIs similar to TreeSitter when possible. For example, the TreeSitter parser exposes a
+`#parse_string(tree, document)` method. TreeStand replicates this behaviour but augments it to return a
+`TreeStand::Tree` instead of the underlying `TreeSitter::Tree`. Similarly, `TreeStand::Tree#root_node` returns a
+`TreeStand::Node` & `TreeSitter::Tree#root_node` returns a `TreeSitter::Node`.
+
+The underlying objects are accessible via a `ts_` prefixed attribute, e.g. `ts_parser`, `ts_tree`, `ts_node`, etc.
 
 ## Contributing
 
