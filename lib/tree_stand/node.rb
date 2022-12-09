@@ -1,16 +1,22 @@
 module TreeStand
+  # Wrapper around a TreeSitter node and provides convient
+  # methods that are missing on the original node. This class
+  # overrides the `method_missing` method to delegate to a nodes
+  # named children.
   class Node
     extend Forwardable
     include Enumerable
 
     def_delegators :@ts_node, :type, :start_byte, :end_byte, :start_point, :end_point
 
+    # @api private
     def initialize(tree, ts_node)
       @tree = tree
       @ts_node = ts_node
       @fields = @ts_node.each_field.to_a.map(&:first)
     end
 
+    # @return [TreeStand::Range]
     def range
       TreeStand::Range.new(
         start_byte: @ts_node.start_byte,
@@ -20,25 +26,37 @@ module TreeStand
       )
     end
 
+    # Node includes enumerable so that you can iterate over the child nodes.
+    # @yieldparam child [TreeStand::Node]
     def each
       @ts_node.each do |child|
         yield TreeStand::Node.new(@tree, child)
       end
     end
 
+    # @return [TreeStand::Node]
     def parent
       TreeStand::Node.new(@tree, @ts_node.parent)
     end
 
+    # A convience method for getting the text of the node. Each TreeStand Node
+    # wraps the parent tree and has access to the source document.
+    # @return [String]
     def text
       @tree.document[@ts_node.start_byte...@ts_node.end_byte]
     end
 
+    # This class overrides the `method_missing` method to delegate to the
+    # node's named children. This allows you to write code like this:
+    #   root = tree.root_node
+    #   child = root.expression
     def method_missing(method, *args, &block)
       return super unless @fields.include?(method.to_s)
       TreeStand::Node.new(@tree, @ts_node.public_send(method, *args, &block))
     end
 
+    # @param other [Object]
+    # @return [bool]
     def ==(other)
       return false unless other.is_a?(TreeStand::Node)
 

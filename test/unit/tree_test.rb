@@ -23,7 +23,7 @@ class TreeTest < Minitest::Test
     node = match["foo_lt_3"].node
     parent = node.parent
 
-    tree.edit(parent.range, parent.right.text)
+    tree.edit!(parent.range, parent.right.text)
 
     assert_equal(<<~SQL, tree.document)
       SELECT 1
@@ -50,7 +50,7 @@ class TreeTest < Minitest::Test
     parent = node.parent
     grandparent = parent.parent
 
-    tree.delete(grandparent.range)
+    tree.delete!(grandparent.range)
 
     assert_equal(<<~SQL, tree.document)
       SELECT 1
@@ -78,7 +78,7 @@ class TreeTest < Minitest::Test
     node = match["foo_lt_3"].node
     parent = node.parent
 
-    tree.edit(parent.range, parent.right.text)
+    tree.edit!(parent.range, parent.right.text)
 
     assert_equal(<<~SQL, tree.document)
       SELECT 1
@@ -107,7 +107,7 @@ class TreeTest < Minitest::Test
     node = match["bar_gt_3"].node
     parent = node.parent
 
-    tree.edit(parent.range, parent.left.text)
+    tree.edit!(parent.range, parent.left.text)
 
     assert_equal(<<~SQL, tree.document)
       SELECT 1
@@ -141,7 +141,7 @@ class TreeTest < Minitest::Test
 
     node = match["bar_gt_3"].node
 
-    tree.edit(node.range, "invalid predicate condition")
+    tree.edit!(node.range, "invalid predicate condition")
 
     assert_equal(<<~SQL, tree.document)
       SELECT 1
@@ -189,13 +189,13 @@ class TreeTest < Minitest::Test
 
         # Replace the grandparent predicate with the left predicate.
         # e.g. a.c_id = 1
-        tree.edit(
+        tree.edit!(
           match["field_name"].node.parent.parent.parent.range,
           match["field_name"].node.parent.parent.parent.left.text,
         )
 
         # Replace the JOIN predicate with the new text
-        tree.edit(join_match.node.range, text)
+        tree.edit!(join_match.node.range, text)
       end
     end
 
