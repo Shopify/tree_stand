@@ -1,0 +1,7 @@
+dependencies:
+  pre:
+    - ./deploy/install-treesitter
+
+deploy:
+  override:
+    - echo "DEPLOYING TO RUBYGEMS"
