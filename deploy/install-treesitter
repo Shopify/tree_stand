@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -ex
+
+PREFIX="$(pwd)/tmp"
+
+mkdir -p tmp/lib tmp/lib
+cd tmp
+
+git clone --depth=1 https://github.com/tree-sitter/tree-sitter.git 2> /dev/null
+cd tree-sitter
+
+make
+PREFIX=$PREFIX make install
+cd ../..
+
+bundle config set build.tree_sitter \
+      --with-tree-sitter-dir=$PREFIX \
+      --with-tree-sitter-lib=$PREFIX/lib \
+      --with-tree-sitter-include=$PREFIX/include \
+      --with-opt-include=$PREFIX/include \
+      --with-opt-lib=$PREFIX/lib
