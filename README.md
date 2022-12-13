@@ -14,6 +14,8 @@ Add this line to your application's Gemfile:
 gem "tree_stand"
 ```
 
+See the [documentation](https://shopify.github.io/tree_stand) for supported features.
+
 ## Usage
 
 ### Setting Up a Parser
