@@ -20,6 +20,7 @@ module TreeStand
     #
     #   sql_parser = TreeStand::Parser.new("sql")
     #   ruby_parser = TreeStand::Parser.new("ruby")
+    # @return [void]
     def configure(&block)
       instance_eval(&block)
     end

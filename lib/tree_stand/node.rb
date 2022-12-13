@@ -28,6 +28,7 @@ module TreeStand
 
     # Node includes enumerable so that you can iterate over the child nodes.
     # @yieldparam child [TreeStand::Node]
+    # @return [Enumerator]
     def each
       @ts_node.each do |child|
         yield TreeStand::Node.new(@tree, child)
@@ -50,6 +51,13 @@ module TreeStand
     # node's named children. This allows you to write code like this:
     #   root = tree.root_node
     #   child = root.expression
+    # @overload method_missing(field_name)
+    #   @param name [Symbol, String]
+    #   @return [TreeStand::Node] Child node for the given field name
+    #   @raise [NoMethodError] Raised if the node does not have child with name `field_name`
+    #
+    # @overload method_missing(method_name, *args, &block)
+    #   @raise [NoMethodError]
     def method_missing(method, *args, &block)
       return super unless @fields.include?(method.to_s)
       TreeStand::Node.new(@tree, @ts_node.public_send(method, *args, &block))

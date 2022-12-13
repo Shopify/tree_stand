@@ -64,6 +64,7 @@ module TreeStand
     # update the tree!
     # @param range [TreeStand::Range]
     # @param replacement [String]
+    # @return [void]
     def edit!(range, replacement)
       new_document = +""
       new_document << @document[0...range.start_byte]
@@ -75,6 +76,7 @@ module TreeStand
     # This method deletes the section of the document specified by range Then
     # it will reparse the document and update the tree!
     # @param range [TreeStand::Range]
+    # @return [void]
     def delete!(range)
       new_document = +""
       new_document << @document[0...range.start_byte]
