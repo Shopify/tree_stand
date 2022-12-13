@@ -1,0 +1,23 @@
+containers:
+  default:
+    build:
+      from: ubuntu-latest
+      type: ci
+      ruby: 3.1
+      rust: stable
+
+steps:
+  - label: Publish Gem
+    timeout: 30m
+    run:
+      - cargo install tree-sitter-cli
+      - tree-sitter -V
+      - mkdir -p tmp
+      - cd tmp
+      - git clone --depth=1 https://github.com/tree-sitter/tree-sitter.git
+      - cd tree-sitter
+      - make
+      - make install
+      - cd ../..
+      - publish:
+          type: gem
