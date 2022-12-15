@@ -21,6 +21,38 @@ module TreeStand
       @fields = @ts_node.each_field.to_a.map(&:first)
     end
 
+    # TreeSitter uses a `TreeSitter::Cursor` to iterate over matches by calling
+    # `curser#next_match` repeatedly until it returns `nil`.
+    #
+    # This method does all of that for you and collects all of the
+    # {TreeStand::Match matches} into an array.
+    #
+    # @example
+    #   # This will return a match for each identifier nodes in the tree.
+    #   tree_matches = tree.query(<<~QUERY)
+    #     (identifier) @identifier
+    #   QUERY
+    #
+    #   # It is equivalent to:
+    #   tree.root_node.query(<<~QUERY)
+    #     (identifier) @identifier
+    #   QUERY
+    #
+    # @see TreeStand::Match
+    # @see TreeStand::Capture
+    #
+    # @param query_string [String]
+    # @return [Array<TreeStand::Match>]
+    def query(query_string)
+      ts_query = TreeSitter::Query.new(@tree.parser.ts_language, query_string)
+      ts_cursor = TreeSitter::QueryCursor.exec(ts_query, ts_node)
+      matches = []
+      while match = ts_cursor.next_match
+        matches << TreeStand::Match.new(@tree, ts_query, match)
+      end
+      matches
+    end
+
     # @return [TreeStand::Range]
     def range
       TreeStand::Range.new(

@@ -26,6 +26,8 @@ module TreeStand
     attr_reader :document
     # @return [TreeSitter::Tree]
     attr_reader :ts_tree
+    # @return [TreeStand::Parser]
+    attr_reader :parser
 
     # @api private
     def initialize(parser, tree, document)
@@ -39,24 +41,12 @@ module TreeStand
       TreeStand::Node.new(self, @ts_tree.root_node)
     end
 
-    # TreeSitter uses a `TreeSitter::Cursor` to iterate over matches by calling
-    # `curser#next_match` repeatedly until it returns `nil`.
-    #
-    # This method does all of that for you and collects them into an array.
-    #
-    # @see TreeStand::Match
-    # @see TreeStand::Capture
-    #
-    # @param query_string [String]
-    # @return [Array<TreeStand::Match>]
+    # (see TreeStand::Node#query)
+    # @note This is a convenience method that calls {TreeStand::Node#query} on
+    #   {#root_node}.
+    # @see TreeStand::Node#query
     def query(query_string)
-      ts_query = TreeSitter::Query.new(@parser.ts_language, query_string)
-      ts_cursor = TreeSitter::QueryCursor.exec(ts_query, @ts_tree.root_node)
-      matches = []
-      while match = ts_cursor.next_match
-        matches << TreeStand::Match.new(self, ts_query, match)
-      end
-      matches
+      root_node.query(query_string)
     end
 
     # This method replaces the section of the document specified by range and

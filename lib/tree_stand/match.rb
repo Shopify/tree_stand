@@ -1,6 +1,7 @@
 module TreeStand
   # Wrapper around a TreeSitter match.
   # @see TreeStand::Tree#query
+  # @see TreeStand::Node#query
   # @see TreeStand::Capture
   class Match
     # @return [TreeStand::Tree]
@@ -9,6 +10,8 @@ module TreeStand
     attr_reader :ts_query
     # @return [TreeSitter::Match]
     attr_reader :ts_match
+    # @return [Array<TreeStand::Capture>]
+    attr_reader :captures
 
     # @api private
     def initialize(tree, ts_query, ts_match)
@@ -16,9 +19,14 @@ module TreeStand
       @ts_query = ts_query
       @ts_match = ts_match
 
-      # TODO: This is a hack to get the captures to be populated.
+      # It's important to load all of the captures when a Match is
+      # instantiated, otherwise the ts_match will be invalid after
+      # TreeSitter::Cursor#next_match is called.
+      #
       # See: https://github.com/Faveod/ruby-tree-sitter/pull/16
-      captures
+      @captures = @ts_match.captures.map do |capture|
+        TreeStand::Capture.new(self, capture)
+      end
     end
 
     # Looks up a capture by name. TreeSitter strips the `@` from the capture name.
@@ -32,13 +40,6 @@ module TreeStand
     # @return [TreeStand::Capture, nil]
     def [](capture_name)
       captures.find { |capture| capture.name == capture_name }
-    end
-
-    # @return [Array<TreeStand::Capture>]
-    def captures
-      @captures ||= @ts_match.captures.map do |capture|
-        TreeStand::Capture.new(self, capture)
-      end
     end
 
     # @param other [Object]

@@ -1,6 +1,7 @@
 module TreeStand
   # Wrapper around a TreeSitter capture.
   # @see TreeStand::Tree#query
+  # @see TreeStand::Node#query
   # @see TreeStand::Match
   class Capture
     # @return [TreeStand::Match]
