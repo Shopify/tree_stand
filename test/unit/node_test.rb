@@ -64,4 +64,71 @@ class NodeTest < Minitest::Test
   def test_nodes_wrap_range_in_a_comparable_struct
     assert_instance_of(TreeStand::Range, @tree.root_node.range)
   end
+
+  def test_query_for_root_node_returns_the_same_as_query_for_tree
+    tree = @parser.parse_string(nil, <<~SQL)
+      SELECT 1
+      FROM table
+      WHERE foo < 3
+        AND bar > 3
+        AND baz < 3;
+    SQL
+
+    # Tree#query
+    matches = tree.query(<<~QUERY)
+      (predicate
+        left: (field name: (identifier))
+        operator: "<"
+        right: (literal)) @x_lt_3
+    QUERY
+
+    assert_equal(2, matches.size)
+    assert_equal(["foo < 3", "baz < 3"], matches.map { |m| m["x_lt_3"].node.text })
+
+    # Node#query
+    matches = tree.root_node.query(<<~QUERY)
+      (predicate
+        left: (field name: (identifier))
+        operator: "<"
+        right: (literal)) @x_lt_3
+    QUERY
+
+    assert_equal(2, matches.size)
+    assert_equal(["foo < 3", "baz < 3"], matches.map { |m| m["x_lt_3"].node.text })
+  end
+
+  def test_query_for_node_returns_only_matches_within_that_node
+    tree = @parser.parse_string(nil, <<~SQL)
+      SELECT 1
+      FROM table
+      WHERE foo < 3
+        AND bar > 3
+        AND baz < 3;
+    SQL
+
+    match = tree.query(<<~QUERY).first
+      (predicate
+        left: (field name: (identifier))
+        operator: ">"
+        right: (literal)) @bar_gt_3
+    QUERY
+
+    node = match["bar_gt_3"].node
+    assert_equal("bar > 3", node.text)
+    assert_equal(<<~SQL.chomp, node.parent.text)
+      foo < 3
+        AND bar > 3
+    SQL
+
+    # Query the parent node
+    matches = node.parent.query(<<~QUERY)
+      (predicate
+        left: (field name: (identifier))
+        operator: "<"
+        right: (literal)) @foo_lt_3
+    QUERY
+
+    assert_equal(1, matches.size)
+    assert_equal("foo < 3", matches.dig(0, "foo_lt_3").node.text)
+  end
 end
