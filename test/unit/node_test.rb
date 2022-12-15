@@ -8,6 +8,11 @@ class NodeTest < Minitest::Test
     SQL
   end
 
+  def test_accessors
+    assert_instance_of(TreeSitter::Node, @tree.root_node.ts_node)
+    assert_equal(@tree, @tree.root_node.tree)
+  end
+
   def test_can_enumerate_children
     program = @tree.root_node
     assert_equal(:program, program.type)

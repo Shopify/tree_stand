@@ -9,6 +9,11 @@ module TreeStand
 
     def_delegators :@ts_node, :type, :start_byte, :end_byte, :start_point, :end_point
 
+    # @return [TreeStand::Tree]
+    attr_reader :tree
+    # @return [TreeSitter::Node]
+    attr_reader :ts_node
+
     # @api private
     def initialize(tree, ts_node)
       @tree = tree
