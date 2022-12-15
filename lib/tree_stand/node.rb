@@ -14,6 +14,14 @@ module TreeStand
     # @return [TreeSitter::Node]
     attr_reader :ts_node
 
+    # @!method to_a
+    #   @example
+    #     node.text # => "3 * 4"
+    #     node.to_a.map(&:text) # => ["3", "*", "4"]
+    #     node.children.map(&:text) # => ["3", "*", "4"]
+    #   @return [Array<TreeStand::Node>]
+    alias_method :children, :to_a
+
     # @api private
     def initialize(tree, ts_node)
       @tree = tree
@@ -64,6 +72,17 @@ module TreeStand
     end
 
     # Node includes enumerable so that you can iterate over the child nodes.
+    # @example
+    #   node.text # => "3 * 4"
+    #
+    # @example Iterate over the child nodes
+    #   node.each do |child|
+    #     print child.text
+    #   end
+    #   # prints: 3*4
+    #
+    # @example Enumerable methods
+    #   node.map(&:text) # => ["3", "*", "4"]
     # @yieldparam child [TreeStand::Node]
     # @return [Enumerator]
     def each
@@ -72,25 +91,34 @@ module TreeStand
       end
     end
 
+    # @example
+    #   node.text # => "4"
+    #   node.parent.text # => "3 * 4"
+    #   node.parent.parent.text # => "1 + 3 * 4"
     # @return [TreeStand::Node]
     def parent
       TreeStand::Node.new(@tree, @ts_node.parent)
     end
 
-    # A convience method for getting the text of the node. Each TreeStand Node
-    # wraps the parent tree and has access to the source document.
+    # A convience method for getting the text of the node. Each {TreeStand::Node}
+    # wraps the parent {#tree} and has access to the source document.
     # @return [String]
     def text
       @tree.document[@ts_node.start_byte...@ts_node.end_byte]
     end
 
     # This class overrides the `method_missing` method to delegate to the
-    # node's named children. This allows you to write code like this:
-    #   root = tree.root_node
-    #   child = root.expression
+    # node's named children.
+    # @example
+    #   node.text          # => "3 * 4"
+    #
+    #   node.left.text     # => "3"
+    #   node.operator.text # => "*"
+    #   node.right.text    # => "4"
+    #   node.operand       # => NoMethodError
     # @overload method_missing(field_name)
     #   @param name [Symbol, String]
-    #   @return [TreeStand::Node] Child node for the given field name
+    #   @return [TreeStand::Node] child node for the given field name
     #   @raise [NoMethodError] Raised if the node does not have child with name `field_name`
     #
     # @overload method_missing(method_name, *args, &block)

@@ -13,6 +13,11 @@ class NodeTest < Minitest::Test
     assert_equal(@tree, @tree.root_node.tree)
   end
 
+  def test_children
+    assert_equal(1, @tree.root_node.children.size)
+    assert_equal(1, @tree.root_node.to_a.size)
+  end
+
   def test_can_enumerate_children
     program = @tree.root_node
     assert_equal(:program, program.type)
