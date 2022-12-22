@@ -1,0 +1,15 @@
+[package]
+name = "tree_stand"
+version = "0.1.0"
+edition = "2021"
+authors = ["Derek Stride <derek@stride.host>"]
+license = "MIT"
+publish = false
+
+[lib]
+name = "tree_stand"
+crate-type = ["cdylib"]
+
+[dependencies]
+rb-sys = { version = "0.9" }
+magnus = "0.4"

@@ -7,4 +7,6 @@
 /spec/reports/
 /tmp/
 /parsers/
+*.bundle
+*.so
 Gemfile.lock

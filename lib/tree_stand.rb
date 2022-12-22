@@ -5,6 +5,8 @@ require "sorbet-runtime"
 require "tree_sitter"
 require "zeitwerk"
 
+require "tree_stand/tree_stand"
+
 loader = Zeitwerk::Loader.for_gem
 loader.setup
 
