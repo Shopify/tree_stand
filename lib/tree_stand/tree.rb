@@ -63,7 +63,7 @@ module TreeStand
       replace_with_new_doc(new_document)
     end
 
-    # This method deletes the section of the document specified by range Then
+    # This method deletes the section of the document specified by range. Then
     # it will reparse the document and update the tree!
     # @param range [TreeStand::Range]
     # @return [void]
