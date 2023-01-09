@@ -13,3 +13,8 @@ crate-type = ["cdylib"]
 [dependencies]
 rb-sys = { version = "0.9" }
 magnus = "0.4"
+tree-sitter = "0.20"
+libloading = "0.7.4"
+
+[build-dependencies]
+cc="*"

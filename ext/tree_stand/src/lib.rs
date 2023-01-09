@@ -1,21 +1,45 @@
-use magnus::{define_global_function, function};
+use magnus::{function, method, define_module, Module, Object};
 
-fn distance(a: (f64, f64), b: (f64, f64)) -> f64 {
-    ((b.0 - a.0).powi(2) + (b.1 - a.1).powi(2)).sqrt()
-}
+#[macro_use]
+mod error;
+mod language;
+mod parser;
+mod tree;
+mod node;
+mod query;
+mod r#match;
+mod capture;
+
+use crate::error::Result;
+use crate::language::Language;
+use crate::parser::Parser;
+use crate::query::Query;
+use crate::tree::Tree;
 
 #[magnus::init]
-fn init() {
-    define_global_function("distance", function!(distance, 2));
-}
+fn init() -> Result<()> {
+    let mtree_sitter = define_module("TreeSitter")?;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+    let clanguage = mtree_sitter.define_class("Language", Default::default())?;
+    clanguage.define_singleton_method("load", function!(Language::load, 2))?;
 
-    #[test]
-    fn test_distance() {
-        assert_eq!(distance((0.0, 0.0), (3.0, 4.0)), 5.0);
-    }
+    let cparser = mtree_sitter.define_class("Parser", Default::default())?;
+    cparser.define_singleton_method("new", function!(Parser::new, 0))?;
+    cparser.define_method("language=", method!(Parser::set_language, 1))?;
+    cparser.define_method("language", method!(Parser::language, 0))?;
+    cparser.define_method("parse_string", method!(Parser::parse_string, 2))?;
 
+    let ctree = mtree_sitter.define_class("Tree", Default::default())?;
+    ctree.define_method("root_node", method!(Tree::root_node, 0))?;
+
+    mtree_sitter.define_class("Node", Default::default())?;
+
+    let cquery = mtree_sitter.define_class("Query", Default::default())?;
+    cquery.define_singleton_method("new", function!(Query::new, 2))?;
+    cquery.define_method("exec", method!(Query::exec, 1))?;
+
+    mtree_sitter.define_class("Match", Default::default())?;
+    mtree_sitter.define_class("Capture", Default::default())?;
+
+    Ok(())
 }

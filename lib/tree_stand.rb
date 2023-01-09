@@ -2,7 +2,7 @@
 # typed: true
 
 require "sorbet-runtime"
-require "tree_sitter"
+# require "tree_sitter"
 require "zeitwerk"
 
 require "tree_stand/tree_stand"
