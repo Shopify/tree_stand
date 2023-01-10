@@ -22,6 +22,8 @@ module TreeStand
   # This is not always possible and depends on the edits you make, beware that
   # the tree will be different after each edit and this approach may cause bugs.
   class Tree
+    include Enumerable
+
     # @return [String]
     attr_reader :document
     # @return [TreeSitter::Tree]
@@ -47,6 +49,17 @@ module TreeStand
     # @see TreeStand::Node#query
     def query(query_string)
       root_node.query(query_string)
+    end
+
+    # (see TreeStand::Node#walk)
+    #
+    # @example Includes enumerable methods
+    #   tree.any? { |node| node.type == :error }
+    #
+    # @note This is a convenience method that calls {TreeStand::Node#walk} on
+    #   {#root_node}.
+    def each(&block)
+      root_node.walk(&block)
     end
 
     # This method replaces the section of the document specified by range and
