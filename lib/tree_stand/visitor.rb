@@ -47,7 +47,7 @@ module TreeStand
     def visit_node(node)
       if respond_to?("on_#{node.type}")
         public_send("on_#{node.type}", node)
-      elsif respond_to?(:_on_default)
+      elsif respond_to?(:_on_default, true)
         _on_default(node)
       end
 
