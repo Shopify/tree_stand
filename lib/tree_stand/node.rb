@@ -7,7 +7,15 @@ module TreeStand
     extend Forwardable
     include Enumerable
 
-    def_delegators :@ts_node, :type, :start_byte, :end_byte, :start_point, :end_point
+    def_delegators(
+      :@ts_node,
+      :type,
+      :start_byte,
+      :end_byte,
+      :start_point,
+      :end_point,
+      :error?,
+    )
 
     # @return [TreeStand::Tree]
     attr_reader :tree
