@@ -2,12 +2,12 @@ require "test_helper"
 
 class RangeTest < Minitest::Test
   def setup
-    @parser = TreeStand::Parser.new("sql")
+    @parser = TreeStand::Parser.new("math")
   end
 
   def test_range_equality
     document = <<~SQL
-      SELECT 1;
+      1 + x * 3
     SQL
     tree = @parser.parse_string(nil, document)
 

@@ -2,26 +2,18 @@ require "test_helper"
 
 class AstModifierTest < Minitest::Test
   def setup
-    @parser = TreeStand::Parser.new("sql")
+    @parser = TreeStand::Parser.new("math")
   end
 
   def test_can_work_with_multiple_edits
-    tree = @parser.parse_string(nil, <<~SQL)
-      SELECT 1
-      FROM table
-      WHERE foo < 3
-        AND bar > 3
-        AND foobar < 3
-        AND baz = 3;
-    SQL
+    tree = @parser.parse_string(nil, <<~MATH)
+      1 + x * 3 - x - 2 * 4 + 5
+    MATH
 
     TreeStand::AstModifier.new(tree).on_match(<<~QUERY) do |ast, match|
-      (predicate
-        left: (field name: (identifier))
-        operator: "<"
-        right: (literal)) @foo_lt_3
+      (product) @product
     QUERY
-      node = match["foo_lt_3"].node
+      node = match["product"].node
       parent = node.parent
 
       if parent.left == node
@@ -31,11 +23,8 @@ class AstModifierTest < Minitest::Test
       end
     end
 
-    assert_equal(<<~SQL, tree.document)
-      SELECT 1
-      FROM table
-      WHERE bar > 3
-        AND baz = 3;
-    SQL
+    assert_equal(<<~MATH, tree.document)
+      1 - x + 5
+    MATH
   end
 end
