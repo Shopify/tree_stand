@@ -136,4 +136,13 @@ class NodeTest < Minitest::Test
     assert_equal(1, matches.size)
     assert_equal("foo < 3", matches.dig(0, "foo_lt_3").node.text)
   end
+
+  def test_error_nodes
+    tree = @parser.parse_string(nil, <<~SQL)
+      SELECT SELECT 1;
+    SQL
+
+    assert_predicate(tree.root_node, :error?)
+    refute_predicate(tree.root_node.first.first, :error?)
+  end
 end
