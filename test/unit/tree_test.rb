@@ -5,6 +5,12 @@ class TreeTest < Minitest::Test
     @parser = TreeStand::Parser.new("math")
   end
 
+  def test_text
+    document = "1 + x * 3 + 2"
+    tree = @parser.parse_string(nil, document)
+    assert_equal(document, tree.document)
+  end
+
   def test_can_replace_text
     tree = @parser.parse_string(nil, <<~MATH)
       1 + x * 3 + 2

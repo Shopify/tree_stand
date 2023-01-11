@@ -10,7 +10,7 @@ module TreeStand
     #   end.visit
     #
     # @see TreeStand::Node#walk
-    # @see TreeStand::Tree#each
+    # @see TreeStand::Tree#walk
     class TreeWalker < Visitor
       # @param node [TreeStand::Node]
       # @param block [Proc] A block that will be called for

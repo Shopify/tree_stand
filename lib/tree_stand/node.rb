@@ -7,13 +7,13 @@ module TreeStand
     extend Forwardable
     include Enumerable
 
+    # @!method type
+    #   @return [Symbol] the type of the node in the tree-sitter grammar.
+    # @!method error?
+    #   @return [bool] true if the node is an error node.
     def_delegators(
       :@ts_node,
       :type,
-      :start_byte,
-      :end_byte,
-      :start_point,
-      :end_point,
       :error?,
     )
 
@@ -118,6 +118,7 @@ module TreeStand
     #
     # @example Enumerable methods
     #   node.map(&:text) # => ["3", "*", "4"]
+    #
     # @yieldparam child [TreeStand::Node]
     # @return [Enumerator]
     def each
