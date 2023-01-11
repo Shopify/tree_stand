@@ -73,6 +73,29 @@ module TreeStand
       matches
     end
 
+    # Returns the first captured node that matches the query string or nil if
+    # there was no captured node.
+    #
+    # @example Find the first identifier node.
+    #   identifier_node = tree.root_node.find_node("(identifier) @identifier")
+    #
+    # @see #find_node!
+    # @see #query
+    # @return [TreeStand::Node, nil]
+    def find_node(query_string)
+      query(query_string).first&.values&.first
+    end
+
+    # Like {#find_node}, except that if no node is found, raises an
+    # {TreeStand::NodeNotFound} error.
+    #
+    # @see #find_node
+    # @return [TreeStand::Node]
+    # @raise [TreeStand::NodeNotFound]
+    def find_node!(query_string)
+      find_node(query_string) || raise(TreeStand::NodeNotFound)
+    end
+
     # @return [TreeStand::Range]
     def range
       TreeStand::Range.new(

@@ -118,4 +118,43 @@ class NodeTest < Minitest::Test
     assert_predicate(tree.root_node, :error?)
     refute_predicate(tree.root_node.first.first, :error?)
   end
+
+  def test_find_node_returns_the_first_node_that_matches_the_query
+    tree = @parser.parse_string(nil, <<~MATH)
+      1 + x * 3 + 2 * 4
+    MATH
+
+    product_node = tree.root_node.find_node!(<<~QUERY)
+      (product) @product
+    QUERY
+
+    assert_equal("x * 3", product_node.text)
+  end
+
+  def test_find_node
+    [
+      "(product) @product",
+      "(sum) @subtraction",
+      "(sum left: (number) @number)",
+      "(product left: (variable)) @sum",
+    ].each do |query|
+      refute_nil(@tree.root_node.find_node!(query))
+    end
+  end
+
+  def test_find_node_with_no_matches
+    [
+      "(product)",
+      "(subtraction) @subtraction",
+      "(sum left: (number) right: (number)) @sum",
+      "(product right: (variable)) @sum",
+    ].each do |query|
+      node = @tree.root_node.find_node(query)
+      assert_nil(node, "Expected to find no node for query: #{query}")
+
+      assert_raises(TreeStand::NodeNotFound) do
+        @tree.root_node.find_node!(query)
+      end
+    end
+  end
 end
