@@ -9,6 +9,9 @@ loader.setup
 module TreeStand
   # Common Ancestor for all TreeStand errors.
   class Error < StandardError; end
+  # Raised when performing a search on a tree where a return value is expected,
+  # but no match is found.
+  class NodeNotFound < Error; end
 
   class << self
     # Easy configuration of the gem.

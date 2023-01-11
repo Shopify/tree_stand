@@ -53,6 +53,20 @@ module Visitors
       assert(@tree.any? { |node| node.type == :number })
     end
 
+    def test_tree_walk_api_walks_the_whole_tree
+      node_types = []
+      @tree.walk do |node|
+        node_types << node.type
+      end
+
+      assert_equal(
+        %i(expression sum number + product variable * number),
+        node_types
+      )
+
+      assert(@tree.any? { |node| node.type == :number })
+    end
+
     def test_node_api_walks_the_whole_tree
       node_types = []
       @tree.root_node.walk do |node|

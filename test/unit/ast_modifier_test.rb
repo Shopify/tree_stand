@@ -13,7 +13,7 @@ class AstModifierTest < Minitest::Test
     TreeStand::AstModifier.new(tree).on_match(<<~QUERY) do |ast, match|
       (product) @product
     QUERY
-      node = match["product"].node
+      node = match["product"]
       parent = node.parent
 
       if parent.left == node

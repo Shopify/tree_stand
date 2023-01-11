@@ -22,6 +22,7 @@ module TreeStand
   # This is not always possible and depends on the edits you make, beware that
   # the tree will be different after each edit and this approach may cause bugs.
   class Tree
+    extend Forwardable
     include Enumerable
 
     # @return [String]
@@ -30,6 +31,42 @@ module TreeStand
     attr_reader :ts_tree
     # @return [TreeStand::Parser]
     attr_reader :parser
+
+    # @!method query(query_string)
+    #   @note This is a convenience method that calls {TreeStand::Node#query} on
+    #     {#root_node}.
+    #
+    # @!method find_node(query_string)
+    #   @note This is a convenience method that calls {TreeStand::Node#find_node} on
+    #     {#root_node}.
+    #
+    # @!method find_node!(query_string)
+    #   @note This is a convenience method that calls {TreeStand::Node#find_node!} on
+    #     {#root_node}.
+    #
+    # @!method walk(&block)
+    #   (see TreeStand::Node#walk)
+    #
+    #   @note This is a convenience method that calls {TreeStand::Node#walk} on
+    #     {#root_node}.
+    #
+    #   @example Tree includes Enumerable
+    #     tree.any? { |node| node.type == :error }
+    #
+    # @!method text
+    #   (see TreeStand::Node#text)
+    #   @note This is a convenience method that calls {TreeStand::Node#text} on
+    #     {#root_node}.
+    def_delegators(
+      :root_node,
+      :query,
+      :find_node,
+      :find_node!,
+      :walk,
+      :text,
+    )
+
+    alias_method :each, :walk
 
     # @api private
     def initialize(parser, tree, document)
@@ -41,25 +78,6 @@ module TreeStand
     # @return [TreeStand::Node]
     def root_node
       TreeStand::Node.new(self, @ts_tree.root_node)
-    end
-
-    # (see TreeStand::Node#query)
-    # @note This is a convenience method that calls {TreeStand::Node#query} on
-    #   {#root_node}.
-    # @see TreeStand::Node#query
-    def query(query_string)
-      root_node.query(query_string)
-    end
-
-    # (see TreeStand::Node#walk)
-    #
-    # @example Includes enumerable methods
-    #   tree.any? { |node| node.type == :error }
-    #
-    # @note This is a convenience method that calls {TreeStand::Node#walk} on
-    #   {#root_node}.
-    def each(&block)
-      root_node.walk(&block)
     end
 
     # This method replaces the section of the document specified by range and

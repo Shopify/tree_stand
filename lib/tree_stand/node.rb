@@ -7,13 +7,13 @@ module TreeStand
     extend Forwardable
     include Enumerable
 
+    # @!method type
+    #   @return [Symbol] the type of the node in the tree-sitter grammar.
+    # @!method error?
+    #   @return [bool] true if the node is an error node.
     def_delegators(
       :@ts_node,
       :type,
-      :start_byte,
-      :end_byte,
-      :start_point,
-      :end_point,
       :error?,
     )
 
@@ -40,8 +40,8 @@ module TreeStand
     # TreeSitter uses a `TreeSitter::Cursor` to iterate over matches by calling
     # `curser#next_match` repeatedly until it returns `nil`.
     #
-    # This method does all of that for you and collects all of the
-    # {TreeStand::Match matches} into an array.
+    # This method does all of that for you and collects all of the matches into
+    # an array and each corresponding capture into a hash.
     #
     # @example
     #   # This will return a match for each identifier nodes in the tree.
@@ -54,19 +54,46 @@ module TreeStand
     #     (identifier) @identifier
     #   QUERY
     #
-    # @see TreeStand::Match
-    # @see TreeStand::Capture
-    #
     # @param query_string [String]
-    # @return [Array<TreeStand::Match>]
+    # @return [Array<Hash<String, TreeStand::Node>>]
     def query(query_string)
       ts_query = TreeSitter::Query.new(@tree.parser.ts_language, query_string)
       ts_cursor = TreeSitter::QueryCursor.exec(ts_query, ts_node)
       matches = []
-      while match = ts_cursor.next_match
-        matches << TreeStand::Match.new(@tree, ts_query, match)
+      while ts_match = ts_cursor.next_match
+        captures = {}
+
+        ts_match.captures.each do |ts_capture|
+          capture_name = ts_query.capture_name_for_id(ts_capture.index)
+          captures[capture_name] = TreeStand::Node.new(@tree, ts_capture.node)
+        end
+
+        matches << captures
       end
       matches
+    end
+
+    # Returns the first captured node that matches the query string or nil if
+    # there was no captured node.
+    #
+    # @example Find the first identifier node.
+    #   identifier_node = tree.root_node.find_node("(identifier) @identifier")
+    #
+    # @see #find_node!
+    # @see #query
+    # @return [TreeStand::Node, nil]
+    def find_node(query_string)
+      query(query_string).first&.values&.first
+    end
+
+    # Like {#find_node}, except that if no node is found, raises an
+    # {TreeStand::NodeNotFound} error.
+    #
+    # @see #find_node
+    # @return [TreeStand::Node]
+    # @raise [TreeStand::NodeNotFound]
+    def find_node!(query_string)
+      find_node(query_string) || raise(TreeStand::NodeNotFound)
     end
 
     # @return [TreeStand::Range]
@@ -91,6 +118,7 @@ module TreeStand
     #
     # @example Enumerable methods
     #   node.map(&:text) # => ["3", "*", "4"]
+    #
     # @yieldparam child [TreeStand::Node]
     # @return [Enumerator]
     def each
