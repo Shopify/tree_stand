@@ -16,7 +16,7 @@ class MatchTest < Minitest::Test
     QUERY
 
     assert_equal(1, matches.length)
-    assert_predicate(matches.first.captures, :empty?)
+    assert_predicate(matches.first, :empty?)
   end
 
   def test_multiple_matches
@@ -26,7 +26,7 @@ class MatchTest < Minitest::Test
 
     assert_equal(2, matches.length)
 
-    matches.map(&:captures).each do |captures|
+    matches.each do |captures|
       assert_predicate(captures, :empty?)
     end
   end
@@ -39,8 +39,8 @@ class MatchTest < Minitest::Test
     QUERY
 
     assert_equal(1, matches.length)
-    assert_equal(1, matches.first.captures.size)
-    assert_equal("1 + x * 3", matches.dig(0, "1_plus_x_times").node.text)
+    assert_equal(1, matches.first.size)
+    assert_equal("1 + x * 3", matches.dig(0, "1_plus_x_times").text)
   end
 
   def test_mutliple_matches_with_captures
@@ -50,12 +50,12 @@ class MatchTest < Minitest::Test
 
     assert_equal(2, matches.length)
 
-    matches.map(&:captures).each do |captures|
+    matches.each do |captures|
       assert_equal(1, captures.size)
     end
 
-    assert_equal("1 + x * 3 + 2", matches.dig(0, "sum").node.text)
-    assert_equal("1 + x * 3", matches.dig(1, "sum").node.text)
+    assert_equal("1 + x * 3 + 2", matches.dig(0, "sum").text)
+    assert_equal("1 + x * 3", matches.dig(1, "sum").text)
   end
 
   def test_match_with_multiple_captures
@@ -65,9 +65,9 @@ class MatchTest < Minitest::Test
         right: (product) @product) @1_plus_x_times
     QUERY
 
-    assert_equal(3, match.captures.size)
-    assert_equal("1", match["number"].node.text)
-    assert_equal("x * 3", match["product"].node.text)
-    assert_equal("1 + x * 3", match["1_plus_x_times"].node.text)
+    assert_equal(3, match.size)
+    assert_equal("1", match["number"].text)
+    assert_equal("x * 3", match["product"].text)
+    assert_equal("1 + x * 3", match["1_plus_x_times"].text)
   end
 end

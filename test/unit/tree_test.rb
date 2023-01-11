@@ -14,7 +14,7 @@ class TreeTest < Minitest::Test
       (product) @product
     QUERY
 
-    node = match["product"].node
+    node = match["product"]
     parent = node.parent
 
     tree.edit!(parent.range, parent.left.text)
@@ -33,7 +33,7 @@ class TreeTest < Minitest::Test
       (product) @product
     QUERY
 
-    node = match["product"].node
+    node = match["product"]
 
     tree.delete!(node.range)
 
@@ -51,7 +51,7 @@ class TreeTest < Minitest::Test
       (product) @product
     QUERY
 
-    node = match["product"].node
+    node = match["product"]
 
     tree.edit!(node.range, "y **")
 

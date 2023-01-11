@@ -75,7 +75,7 @@ class NodeTest < Minitest::Test
     QUERY
 
     assert_equal(2, matches.size)
-    assert_equal(["1 + x", "2 + 3"], matches.map { |m| m["sum"].node.text })
+    assert_equal(["1 + x", "2 + 3"], matches.map { |m| m["sum"].text })
 
     # Node#query
     matches = tree.root_node.query(<<~QUERY)
@@ -83,7 +83,7 @@ class NodeTest < Minitest::Test
     QUERY
 
     assert_equal(2, matches.size)
-    assert_equal(["1 + x", "2 + 3"], matches.map { |m| m["sum"].node.text })
+    assert_equal(["1 + x", "2 + 3"], matches.map { |m| m["sum"].text })
   end
 
   def test_query_for_node_returns_only_matches_within_that_node
@@ -95,7 +95,7 @@ class NodeTest < Minitest::Test
       (sum) @sum
     QUERY
 
-    node = match["sum"].node
+    node = match["sum"]
     assert_equal("1 + x * 3 + 2", node.text)
     assert_equal(<<~MATH.chomp, node.left.text)
       1 + x * 3
@@ -107,7 +107,7 @@ class NodeTest < Minitest::Test
     QUERY
 
     assert_equal(1, matches.size)
-    assert_equal("1 + x * 3", matches.dig(0, "sum").node.text)
+    assert_equal("1 + x * 3", matches.dig(0, "sum").text)
   end
 
   def test_error_nodes
