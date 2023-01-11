@@ -99,6 +99,24 @@ module TreeStand
       end
     end
 
+    # (see TreeStand::Visitors::TreeWalker)
+    # Backed by {TreeStand::Visitors::TreeWalker}.
+    #
+    # @example Check the subtree for error nodes
+    #   node.walk.any? { |node| node.type == :error }
+    #
+    # @yieldparam node [TreeStand::Node]
+    # @return [Enumerator]
+    #
+    # @see TreeStand::Visitors::TreeWalker
+    def walk(&block)
+      Enumerator.new do |yielder|
+        Visitors::TreeWalker.new(self) do |child|
+          yielder << child
+        end.visit
+      end.each(&block)
+    end
+
     # @example
     #   node.text # => "4"
     #   node.parent.text # => "3 * 4"
