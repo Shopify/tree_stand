@@ -2,21 +2,17 @@ require "test_helper"
 
 class MatchTest < Minitest::Test
   def setup
-    @parser = TreeStand::Parser.new("sql")
-    @tree = @parser.parse_string(nil, <<~SQL)
-      SELECT 1
-      FROM table
-      WHERE foo < 3
-        AND bar > 3;
-    SQL
+    @parser = TreeStand::Parser.new("math")
+    @tree = @parser.parse_string(nil, <<~MATH)
+      1 + x * 3 + 2
+    MATH
   end
 
   def test_single_match
     matches = @tree.query(<<~QUERY)
-      (predicate
-        left: (field name: (identifier))
-        operator: "<"
-        right: (literal))
+      (sum
+        left: (number)
+        right: (product))
     QUERY
 
     assert_equal(1, matches.length)
@@ -25,9 +21,7 @@ class MatchTest < Minitest::Test
 
   def test_multiple_matches
     matches = @tree.query(<<~QUERY)
-      (predicate
-        left: (field name: (identifier))
-        right: (literal))
+      (sum)
     QUERY
 
     assert_equal(2, matches.length)
@@ -39,22 +33,19 @@ class MatchTest < Minitest::Test
 
   def test_single_match_with_capture
     matches = @tree.query(<<~QUERY)
-      (predicate
-        left: (field name: (identifier))
-        operator: "<"
-        right: (literal)) @foo_lt_3
+      (sum
+        left: (number)
+        right: (product)) @1_plus_x_times
     QUERY
 
     assert_equal(1, matches.length)
     assert_equal(1, matches.first.captures.size)
-    assert_equal("foo < 3", matches.dig(0, "foo_lt_3").node.text)
+    assert_equal("1 + x * 3", matches.dig(0, "1_plus_x_times").node.text)
   end
 
   def test_mutliple_matches_with_captures
     matches = @tree.query(<<~QUERY)
-      (predicate
-        left: (field name: (identifier))
-        right: (literal)) @field_op_literal
+      (sum) @sum
     QUERY
 
     assert_equal(2, matches.length)
@@ -63,22 +54,20 @@ class MatchTest < Minitest::Test
       assert_equal(1, captures.size)
     end
 
-    assert_equal("foo < 3", matches.dig(0, "field_op_literal").node.text)
-    assert_equal("bar > 3", matches.dig(1, "field_op_literal").node.text)
+    assert_equal("1 + x * 3 + 2", matches.dig(0, "sum").node.text)
+    assert_equal("1 + x * 3", matches.dig(1, "sum").node.text)
   end
 
   def test_match_with_multiple_captures
     match = @tree.query(<<~QUERY).first
-      (predicate
-        left: (field name: (identifier) @field)
-        operator: "<" @op
-        right: (literal) @value) @foo_lt_3
+      (sum
+        left: (number) @number
+        right: (product) @product) @1_plus_x_times
     QUERY
 
-    assert_equal(4, match.captures.size)
-    assert_equal("foo", match["field"].node.text)
-    assert_equal("<", match["op"].node.text)
-    assert_equal("3", match["value"].node.text)
-    assert_equal("foo < 3", match["foo_lt_3"].node.text)
+    assert_equal(3, match.captures.size)
+    assert_equal("1", match["number"].node.text)
+    assert_equal("x * 3", match["product"].node.text)
+    assert_equal("1 + x * 3", match["1_plus_x_times"].node.text)
   end
 end
