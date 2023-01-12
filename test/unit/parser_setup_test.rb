@@ -1,7 +1,7 @@
 require "test_helper"
 
 class ParserSetupTest < Minitest::Test
-  def test_can_parse_a_sql_statement
+  def test_can_parse_a_document
     parser = TreeSitter::Parser.new.tap do |parser|
       parser.language = TreeSitter::Language.load("math", "parsers/math.so")
     end
@@ -23,7 +23,7 @@ class ParserSetupTest < Minitest::Test
     refute_nil(cursor.next_match)
   end
 
-  def test_can_parse_a_sql_statement_with_tree_sit_api
+  def test_can_parse_a_document_with_tree_stand_api
     parser = TreeStand::Parser.new("math")
     tree = parser.parse_string(nil, <<~MATH)
       1 + x * 3
@@ -39,5 +39,20 @@ class ParserSetupTest < Minitest::Test
     QUERY
 
     assert_equal(1, matches.size)
+  end
+
+  def test_parse_document_with_errors
+    parser = TreeStand::Parser.new("math")
+    document = <<~MATH
+      1 + x * 3 // 3
+    MATH
+
+
+    tree = parser.parse_string(nil, document)
+    assert(tree.any?(&:error?))
+
+    assert_raises(TreeStand::InvalidDocument) do
+      parser.parse_string!(nil, document)
+    end
   end
 end

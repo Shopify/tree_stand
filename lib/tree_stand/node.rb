@@ -81,6 +81,7 @@ module TreeStand
     #
     # @see #find_node!
     # @see #query
+    # @param query_string [String]
     # @return [TreeStand::Node, nil]
     def find_node(query_string)
       query(query_string).first&.values&.first
@@ -90,6 +91,7 @@ module TreeStand
     # {TreeStand::NodeNotFound} error.
     #
     # @see #find_node
+    # @param query_string [String]
     # @return [TreeStand::Node]
     # @raise [TreeStand::NodeNotFound]
     def find_node!(query_string)
