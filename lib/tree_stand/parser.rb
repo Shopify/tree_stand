@@ -38,5 +38,21 @@ module TreeStand
       ts_tree = @ts_parser.parse_string(nil, document)
       TreeStand::Tree.new(self, ts_tree, document)
     end
+
+    # (see #parse_string)
+    # @note Like {#parse_string}, except that if the tree contains any parse
+    #   errors, raises an {TreeStand::InvalidDocument} error.
+    #
+    # @see #parse_string
+    # @raise [TreeStand::InvalidDocument]
+    def parse_string!(tree, document)
+      tree = parse_string(tree, document)
+      return tree unless tree.any?(&:error?)
+
+      raise(InvalidDocument, <<~ERROR)
+        Encountered errors in the document. Check the tree for more details.
+          #{tree}
+      ERROR
+    end
   end
 end
