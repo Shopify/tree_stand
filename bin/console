@@ -3,12 +3,20 @@
 require "bundler/setup"
 require "tree_stand"
 
-# You can add fixtures and/or initialization code here to make experimenting
-# with your gem easier. You can also use a different console, if you like.
+TreeStand.configure do
+  config.parser_path = File.expand_path(
+    File.join(__dir__, "..", "parsers")
+  )
+end
 
-# (If you use this, don't forget to add pry to your Gemfile!)
-# require "pry"
-# Pry.start
+ivars_to_add = <<~RUBY
+  @parser = TreeStand::Parser.new("math")
+  @tree = @parser.parse_string(nil, "1 + x")
+RUBY
 
-require "irb"
-IRB.start(__FILE__)
+eval(ivars_to_add)
+puts("available ivars:")
+puts(ivars_to_add)
+
+require "pry"
+Pry.start
