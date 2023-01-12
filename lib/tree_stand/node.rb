@@ -93,10 +93,12 @@ module TreeStand
     #   node.map(&:text) # => ["3", "*", "4"]
     # @yieldparam child [TreeStand::Node]
     # @return [Enumerator]
-    def each
-      @ts_node.each do |child|
-        yield TreeStand::Node.new(@tree, child)
-      end
+    def each(&block)
+      Enumerator.new do |yielder|
+        @ts_node.each do |child|
+          yielder << TreeStand::Node.new(@tree, child)
+        end
+      end.each(&block)
     end
 
     # (see TreeStand::Visitors::TreeWalker)
@@ -162,6 +164,17 @@ module TreeStand
       range == other.range &&
         type == other.type &&
         text == other.text
+    end
+
+    # (see TreeStand::Utils::Printer)
+    # Backed by {TreeStand::Utils::Printer}.
+    #
+    # @param pp [PP]
+    # @return [void]
+    #
+    # @see TreeStand::Utils::Printer
+    def pretty_print(pp)
+      Utils::Printer.new(ralign: 80).print(self, io: pp.output)
     end
   end
 end
