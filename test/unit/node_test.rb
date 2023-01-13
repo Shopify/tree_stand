@@ -3,7 +3,7 @@ require "test_helper"
 class NodeTest < Minitest::Test
   def setup
     @parser = TreeStand::Parser.new("math")
-    @tree = @parser.parse_string(nil, <<~MATH)
+    @tree = @parser.parse_string(<<~MATH)
       1 + x * 3
     MATH
   end
@@ -65,7 +65,7 @@ class NodeTest < Minitest::Test
   end
 
   def test_query_for_root_node_returns_the_same_as_query_for_tree
-    tree = @parser.parse_string(nil, <<~MATH)
+    tree = @parser.parse_string(<<~MATH)
       (1 + x) * (2 + 3)
     MATH
 
@@ -87,7 +87,7 @@ class NodeTest < Minitest::Test
   end
 
   def test_query_for_node_returns_only_matches_within_that_node
-    tree = @parser.parse_string(nil, <<~MATH)
+    tree = @parser.parse_string(<<~MATH)
       1 + x * 3 + 2
     MATH
 
@@ -111,7 +111,7 @@ class NodeTest < Minitest::Test
   end
 
   def test_error_nodes
-    tree = @parser.parse_string(nil, <<~MATH)
+    tree = @parser.parse_string(<<~MATH)
       1 ++ x
     MATH
 
@@ -120,7 +120,7 @@ class NodeTest < Minitest::Test
   end
 
   def test_find_node_returns_the_first_node_that_matches_the_query
-    tree = @parser.parse_string(nil, <<~MATH)
+    tree = @parser.parse_string(<<~MATH)
       1 + x * 3 + 2 * 4
     MATH
 

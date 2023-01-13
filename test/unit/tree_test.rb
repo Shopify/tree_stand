@@ -7,12 +7,12 @@ class TreeTest < Minitest::Test
 
   def test_text
     document = "1 + x * 3 + 2"
-    tree = @parser.parse_string(nil, document)
+    tree = @parser.parse_string(document)
     assert_equal(document, tree.document)
   end
 
   def test_can_replace_text
-    tree = @parser.parse_string(nil, <<~MATH)
+    tree = @parser.parse_string(<<~MATH)
       1 + x * 3 + 2
     MATH
 
@@ -31,7 +31,7 @@ class TreeTest < Minitest::Test
   end
 
   def test_can_delete_a_node
-    tree = @parser.parse_string(nil, <<~MATH)
+    tree = @parser.parse_string(<<~MATH)
       1 + x * 3 + 2
     MATH
 
@@ -49,7 +49,7 @@ class TreeTest < Minitest::Test
   end
 
   def test_can_handle_invalid_edits
-    tree = @parser.parse_string(nil, <<~MATH)
+    tree = @parser.parse_string(<<~MATH)
       1 + x * 3 + 2
     MATH
 

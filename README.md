@@ -37,9 +37,10 @@ ruby_parser = TreeStand::Parser.new("ruby")
 ### API Conventions
 
 TreeStand aims to provide APIs similar to TreeSitter when possible. For example, the TreeSitter parser exposes a
-`#parse_string(tree, document)` method. TreeStand replicates this behaviour but augments it to return a
-`TreeStand::Tree` instead of the underlying `TreeSitter::Tree`. Similarly, `TreeStand::Tree#root_node` returns a
-`TreeStand::Node` & `TreeSitter::Tree#root_node` returns a `TreeSitter::Node`.
+`#parse_string(tree, document)` method. TreeStand replicates this behaviour closely with it's `#parse_string(document,
+tree: nil)` method but augments it to return a `TreeStand::Tree` instead of the underlying `TreeSitter::Tree`.
+Similarly, `TreeStand::Tree#root_node` returns a `TreeStand::Node` & `TreeSitter::Tree#root_node` returns a
+`TreeSitter::Node`.
 
 The underlying objects are accessible via a `ts_` prefixed attribute, e.g. `ts_parser`, `ts_tree`, `ts_node`, etc.
 

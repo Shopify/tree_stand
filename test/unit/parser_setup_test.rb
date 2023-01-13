@@ -25,7 +25,7 @@ class ParserSetupTest < Minitest::Test
 
   def test_can_parse_a_document_with_tree_stand_api
     parser = TreeStand::Parser.new("math")
-    tree = parser.parse_string(nil, <<~MATH)
+    tree = parser.parse_string( <<~MATH)
       1 + x * 3
     MATH
 
@@ -48,11 +48,11 @@ class ParserSetupTest < Minitest::Test
     MATH
 
 
-    tree = parser.parse_string(nil, document)
+    tree = parser.parse_string(document)
     assert(tree.any?(&:error?))
 
     assert_raises(TreeStand::InvalidDocument) do
-      parser.parse_string!(nil, document)
+      parser.parse_string!(document)
     end
   end
 end

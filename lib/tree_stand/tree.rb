@@ -109,7 +109,7 @@ module TreeStand
 
     def replace_with_new_doc(new_document)
       @document = new_document
-      new_tree = @parser.parse_string(@ts_tree, @document)
+      new_tree = @parser.parse_string(@document, tree: self)
       @ts_tree = new_tree.ts_tree
     end
   end
