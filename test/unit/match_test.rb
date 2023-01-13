@@ -3,7 +3,7 @@ require "test_helper"
 class MatchTest < Minitest::Test
   def setup
     @parser = TreeStand::Parser.new("math")
-    @tree = @parser.parse_string(nil, <<~MATH)
+    @tree = @parser.parse_string(<<~MATH)
       1 + x * 3 + 2
     MATH
   end

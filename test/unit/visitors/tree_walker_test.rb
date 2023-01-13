@@ -4,7 +4,7 @@ module Visitors
   class TreeWalkerTest < Minitest::Test
     def setup
       @parser = TreeStand::Parser.new("math")
-      @tree = @parser.parse_string(nil, <<~MATH)
+      @tree = @parser.parse_string(<<~MATH)
         1 + x * 3
       MATH
     end
@@ -22,7 +22,7 @@ module Visitors
     end
 
     def test_walk_the_tree_depth_first
-      tree = @parser.parse_string(nil, <<~MATH)
+      tree = @parser.parse_string(<<~MATH)
         1 + x * 3 + 2
       MATH
 

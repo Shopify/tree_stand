@@ -9,7 +9,7 @@ class RangeTest < Minitest::Test
     document = <<~SQL
       1 + x * 3
     SQL
-    tree = @parser.parse_string(nil, document)
+    tree = @parser.parse_string(document)
 
     range = TreeStand::Range.new(
       start_byte: 0,

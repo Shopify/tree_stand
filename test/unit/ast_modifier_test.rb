@@ -6,7 +6,7 @@ class AstModifierTest < Minitest::Test
   end
 
   def test_can_work_with_multiple_edits
-    tree = @parser.parse_string(nil, <<~MATH)
+    tree = @parser.parse_string(<<~MATH)
       1 + x * 3 - x - 2 * 4 + 5
     MATH
 

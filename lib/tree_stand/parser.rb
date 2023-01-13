@@ -30,11 +30,13 @@ module TreeStand
     end
 
     # Parse the provided document with the TreeSitter parser.
-    # @param tree [TreeStand::Tree]
+    # @param tree [TreeStand::Tree, nil] providing the old tree will allow the
+    #   parser to take advantage of incremental parsing and improve performance
+    #   by re-useing nodes from the old tree.
     # @param document [String]
     # @return [TreeStand::Tree]
-    def parse_string(tree, document)
-      # There's a bug with passing a non-nil tree
+    def parse_string(document, tree: nil)
+      # @todo There's a bug with passing a non-nil tree
       ts_tree = @ts_parser.parse_string(nil, document)
       TreeStand::Tree.new(self, ts_tree, document)
     end
@@ -45,8 +47,8 @@ module TreeStand
     #
     # @see #parse_string
     # @raise [TreeStand::InvalidDocument]
-    def parse_string!(tree, document)
-      tree = parse_string(tree, document)
+    def parse_string!(document, tree: nil)
+      tree = parse_string(document, tree: tree)
       return tree unless tree.any?(&:error?)
 
       raise(InvalidDocument, <<~ERROR)

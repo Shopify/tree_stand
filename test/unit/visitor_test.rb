@@ -6,7 +6,7 @@ class VisitorTest < Minitest::Test
   end
 
   def test_on_default
-    tree = @parser.parse_string(nil, <<~MATH)
+    tree = @parser.parse_string(<<~MATH)
       1 + x * 3
     MATH
 
@@ -23,7 +23,7 @@ class VisitorTest < Minitest::Test
   end
 
   def test_custom_visitor_hooks
-    tree = @parser.parse_string(nil, <<~MATH)
+    tree = @parser.parse_string(<<~MATH)
       1 + x * 3
     MATH
 

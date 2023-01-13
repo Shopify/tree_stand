@@ -8,7 +8,7 @@ module Utils
     end
 
     def test_can_print_a_node
-      tree = @parser.parse_string(nil, <<~MATH)
+      tree = @parser.parse_string(<<~MATH)
         1 + x * 3
       MATH
 
@@ -25,7 +25,7 @@ module Utils
     end
 
     def test_pretty_printing_nodes
-      tree = @parser.parse_string(nil, <<~MATH)
+      tree = @parser.parse_string(<<~MATH)
         1 + x * 3 + 2 / 4 ** 8 - 9 * (10 - 11.1)
       MATH
 
