@@ -159,7 +159,7 @@ module TreeStand
     end
 
     # A convience method for getting the text of the node. Each {TreeStand::Node}
-    # wraps the parent {#tree} and has access to the source document.
+    # wraps the parent {TreeStand::Tree #tree} and has access to the source document.
     # @return [String]
     def text
       @tree.document[@ts_node.start_byte...@ts_node.end_byte]
