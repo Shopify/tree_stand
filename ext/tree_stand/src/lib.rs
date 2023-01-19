@@ -30,7 +30,7 @@ fn init() -> Result<()> {
     cparser.define_method("parse_string", method!(Parser::parse_string, 2))?;
 
     let ctree = mtree_sitter.define_class("Tree", Default::default())?;
-    ctree.define_method("root_node", method!(Tree::root_node, 0))?;
+    ctree.define_method("root_node", method!(Tree::root_node, 1))?;
 
     mtree_sitter.define_class("Node", Default::default())?;
 

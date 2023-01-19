@@ -15,8 +15,9 @@ impl Tree {
         }
     }
 
-    pub fn root_node(&self) -> RTypedData {
-        let node = Node::new(self.ts_tree.root_node());
+    pub fn root_node(rb_self: RTypedData) -> RTypedData {
+        let tree = rb_self.try_convert::<Tree>().unwrap();
+        let node = Node::new(rb_self, rb_self.ts_tree.root_node());
         RTypedData::wrap(node)
     }
 }

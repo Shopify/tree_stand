@@ -3,16 +3,19 @@ use tree_sitter;
 
 use crate::tree::Tree;
 
+// TypedData can't be derived for generic types
+// #[magnus::wrap(class = "TreeSitter::Node", free_immediately, size)]
 #[derive(DataTypeFunctions)]
 pub struct Node<'tree> {
-    pub tree: &'tree Tree,
+    tree: Tree,
     pub ts_node: Box<tree_sitter::Node<'tree>>,
 }
 
+// TypedData: Send + Sized,
 unsafe impl Send for Node<'_> {}
 
 impl Node<'_> {
-    pub fn new(ts_node: tree_sitter::Node) -> Self {
+    pub fn new(tree: Tree, ts_node: tree_sitter::Node) -> Self {
         let node = Box::new(ts_node.clone());
         Self {
             tree,
