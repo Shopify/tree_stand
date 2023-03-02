@@ -1,10 +1,15 @@
+# frozen_string_literal: true
+# typed: true
+
 module TreeStand
-  # An experimental class to modify the AST. I re-runs the query on the
+  # An experimental class to modify the AST. It re-runs the query on the
   # modified document every loop to ensure that the match is still valid.
   # @see TreeStand::Tree
   # @api experimental
   class AstModifier
-    # @param tree [TreeStand::Tree]
+    extend T::Sig
+
+    sig { params(tree: TreeStand::Tree).void }
     def initialize(tree)
       @tree = tree
     end

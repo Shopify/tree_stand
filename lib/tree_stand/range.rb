@@ -1,6 +1,11 @@
+# frozen_string_literal: true
+# typed: true
+
 module TreeStand
   # Wrapper around a TreeSitter range. This is mainly used to compare ranges.
   class Range
+    extend T::Sig
+
     # Point is a Struct containing the row and column from a TreeSitter point.
     # TreeStand uses this to compare points.
     # @!attribute [rw] row
@@ -9,16 +14,24 @@ module TreeStand
     #   @return [Integer]
     Point = Struct.new(:row, :column)
 
-    # @return [Integer]
+    sig { returns(Integer) }
     attr_reader :start_byte
-    # @return [Integer]
+    sig { returns(Integer) }
     attr_reader :end_byte
-    # @return [TreeStand::Range::Point]
+    sig { returns(TreeStand::Range::Point) }
     attr_reader  :start_point
-    # @return [TreeStand::Range::Point]
+    sig { returns(TreeStand::Range::Point) }
     attr_reader  :end_point
 
     # @api private
+    sig do
+      params(
+        start_byte: Integer,
+        end_byte: Integer,
+        start_point: T.any(TreeStand::Range::Point, TreeSitter::Point),
+        end_point: T.any(TreeStand::Range::Point, TreeSitter::Point),
+      ).void
+    end
     def initialize(start_byte:, end_byte:, start_point:, end_point:)
       @start_byte = start_byte
       @end_byte = end_byte
@@ -26,8 +39,7 @@ module TreeStand
       @end_point = Point.new(end_point.row, end_point.column)
     end
 
-    # @param other [Object]
-    # @return [bool]
+    sig { params(other: Object).returns(T::Boolean) }
     def ==(other)
       return false unless other.is_a?(TreeStand::Range)
 

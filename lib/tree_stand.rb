@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+# typed: true
+
+require "sorbet-runtime"
 require "tree_sitter"
 require "zeitwerk"
 
@@ -16,6 +20,8 @@ module TreeStand
   class NodeNotFound < Error; end
 
   class << self
+    extend T::Sig
+
     # Easy configuration of the gem.
     #
     # @example
@@ -25,12 +31,12 @@ module TreeStand
     #
     #   sql_parser = TreeStand::Parser.new("sql")
     #   ruby_parser = TreeStand::Parser.new("ruby")
-    # @return [void]
+    sig { params(block: T.proc.void).void }
     def configure(&block)
       instance_eval(&block)
     end
 
-    # @return [TreeStand::Config]
+    sig { returns(TreeStand::Config) }
     def config
       @config ||= Config.new
     end

@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# typed: true
+
 module TreeStand
   # Wrapper around the TreeSitter parser. It looks up the parser by filename in
   # the configured parsers directory.
@@ -12,12 +15,15 @@ module TreeStand
   #   # Looks for a parser in `path/to/parser/folder/ruby.{so,dylib}`
   #   ruby_parser = TreeStand::Parser.new("ruby")
   class Parser
-    # @return [TreeSitter::Language]
+    extend T::Sig
+
+    sig { returns(TreeSitter::Language) }
     attr_reader :ts_language
-    # @return [TreeSitter::Parser]
+    sig { returns(TreeSitter::Parser) }
     attr_reader :ts_parser
 
     # @param language [String]
+    sig { params(language: String).void }
     def initialize(language)
       @language_string = language
       @ts_language = TreeSitter::Language.load(
@@ -33,8 +39,7 @@ module TreeStand
     # @param tree [TreeStand::Tree, nil] providing the old tree will allow the
     #   parser to take advantage of incremental parsing and improve performance
     #   by re-useing nodes from the old tree.
-    # @param document [String]
-    # @return [TreeStand::Tree]
+    sig { params(document: String, tree: T.nilable(TreeStand::Tree)).returns(TreeStand::Tree) }
     def parse_string(document, tree: nil)
       # @todo There's a bug with passing a non-nil tree
       ts_tree = @ts_parser.parse_string(nil, document)
@@ -47,6 +52,7 @@ module TreeStand
     #
     # @see #parse_string
     # @raise [TreeStand::InvalidDocument]
+    sig { params(document: String, tree: T.nilable(TreeStand::Tree)).returns(TreeStand::Tree) }
     def parse_string!(document, tree: nil)
       tree = parse_string(document, tree: tree)
       return tree unless tree.any?(&:error?)

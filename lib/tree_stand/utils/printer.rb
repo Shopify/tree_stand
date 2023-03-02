@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# typed: true
+
 module TreeStand
   # A collection of useful methods for working with syntax trees.
   module Utils
@@ -11,16 +14,16 @@ module TreeStand
     #   #   ("+")                       | +
     #   #   right: (variable)))         | x
     class Printer
-      # @param ralign [Integer] the right alignment for the text column.
+      extend T::Sig
+
+      # @param ralign the right alignment for the text column.
+      sig { params(ralign: Integer).void }
       def initialize(ralign:)
         @ralign = ralign
       end
 
       # (see TreeStand::Utils::Printer)
-      #
-      # @param node [TreeStand::Node]
-      # @param io [IO]
-      # @return [IO]
+      sig { params(node: TreeStand::Node, io: T.any(IO, StringIO)).returns(T.any(IO, StringIO)) }
       def print(node, io: StringIO.new)
         lines = pretty_output_lines(node)
 
@@ -48,7 +51,7 @@ module TreeStand
           return [Line.new("#{indent}#{prefix}#{ts_node}", node.text)]
         end
 
-        lines = [Line.new("#{indent}#{prefix}(#{ts_node.type}", "")]
+        lines = T.let([Line.new("#{indent}#{prefix}(#{ts_node.type}", "")], T::Array[Line])
 
         node.each.with_index do |child, index|
           lines += if field_name = ts_node.field_name_for_child(index)
@@ -62,7 +65,7 @@ module TreeStand
           end
         end
 
-        lines.last.sexpr << ")"
+        T.must(lines.last).sexpr << ")"
         lines
       end
     end

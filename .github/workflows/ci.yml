@@ -32,4 +32,5 @@ jobs:
       - run: sudo apt-get install -y libtree-sitter-dev
       - run: bundle install --jobs=3 --retry=3 --path=vendor/bundle
       - run: bin/setup
+      - run: bundle exec srb tc
       - run: bundle exec rake

@@ -30,5 +30,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "ruby_tree_sitter"
+  spec.add_dependency "sorbet-runtime"
   spec.add_dependency "zeitwerk"
 end
