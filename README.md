@@ -20,7 +20,7 @@ See the [documentation](https://shopify.github.io/tree_stand) for supported feat
 
 ### Setting Up a Parser
 
-TreeStand do not help with compiling individual parsers. However, once you compile a parser and generate a shared
+TreeStand does not help with compiling individual parsers. However, once you compile a parser and generate a shared
 object (`.so`) or a dynamic library (`.dylib`) you can tell TreeStand where to find them and pass the parser filename
 to `TreeStand::Parser::new`.
 

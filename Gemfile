@@ -2,4 +2,15 @@ source "https://rubygems.org"
 
 gemspec
 
-gem 'tree_sitter', git: 'https://github.com/Faveod/ruby-tree-sitter'
+group :development, :test do
+  gem "bundler", "~> 2.3"
+  gem "rake", "~> 13.0"
+  gem "pry-byebug", "~> 3.10"
+  gem "yard", "~> 0.9.28"
+end
+
+group :test do
+  gem "minitest", "~> 5.17"
+  gem "minitest-reporters", "~> 1.5"
+  gem "minitest-focus", "~> 1.3"
+end
