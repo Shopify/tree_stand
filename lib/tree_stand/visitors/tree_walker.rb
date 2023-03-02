@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# typed: true
+
 module TreeStand
   # A collection of useful visitors for traversing trees.
   module Visitors
@@ -12,9 +15,16 @@ module TreeStand
     # @see TreeStand::Node#walk
     # @see TreeStand::Tree#walk
     class TreeWalker < Visitor
-      # @param node [TreeStand::Node]
+      extend T::Sig
+
       # @param block [Proc] A block that will be called for
       #   each node in the tree.
+      sig do
+        params(
+          node: TreeStand::Node,
+          block: T.proc.params(node: TreeStand::Node).void,
+        ).void
+      end
       def initialize(node, &block)
         super(node)
         @block = block

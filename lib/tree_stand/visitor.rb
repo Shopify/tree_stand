@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# typed: true
+
 module TreeStand
   # Depth-first traversal through the tree, calling hooks at each stop.
   #
@@ -28,7 +31,9 @@ module TreeStand
   #   visitor.count
   #   # => 3
   class Visitor
-    # @param node [TreeStand::Node]
+    extend T::Sig
+
+    sig { params(node: TreeStand::Node).void }
     def initialize(node)
       @node = node
     end
@@ -36,7 +41,7 @@ module TreeStand
     # Run the visitor on the document and return self. Allows chaining create and visit.
     # @example
     #   visitor = CountingVisitor.new(node, :predicate).visit
-    # @return [self]
+    sig { returns(T.self_type) }
     def visit
       visit_node(@node)
       self
@@ -47,13 +52,16 @@ module TreeStand
     def visit_node(node)
       if respond_to?("on_#{node.type}")
         public_send("on_#{node.type}", node)
-      elsif respond_to?(:_on_default, true)
+      else
         _on_default(node)
       end
 
       node.each do |child|
         visit_node(child)
       end
+    end
+
+    def _on_default(node)
     end
   end
 end

@@ -19,6 +19,12 @@ bin/setup
 bundle exec rake test
 ```
 
+### Typechecking
+
+```
+bundle exec srb tc
+```
+
 ### Documentation
 
 To run the documentation server, execute the following command and open [localhost:8808](http://localhost:8808).

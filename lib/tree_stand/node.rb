@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+# typed: true
+
 module TreeStand
   # Wrapper around a TreeSitter node and provides convient
   # methods that are missing on the original node. This class
   # overrides the `method_missing` method to delegate to a nodes
   # named children.
   class Node
+    extend T::Sig
     extend Forwardable
     include Enumerable
 
@@ -17,20 +21,13 @@ module TreeStand
       :error?,
     )
 
-    # @return [TreeStand::Tree]
+    sig { returns(TreeStand::Tree) }
     attr_reader :tree
-    # @return [TreeSitter::Node]
+    sig { returns(TreeSitter::Node) }
     attr_reader :ts_node
 
-    # @!method to_a
-    #   @example
-    #     node.text # => "3 * 4"
-    #     node.to_a.map(&:text) # => ["3", "*", "4"]
-    #     node.children.map(&:text) # => ["3", "*", "4"]
-    #   @return [Array<TreeStand::Node>]
-    alias_method :children, :to_a
-
     # @api private
+    sig { params(tree: TreeStand::Tree, ts_node: TreeSitter::Node).void }
     def initialize(tree, ts_node)
       @tree = tree
       @ts_node = ts_node
@@ -53,9 +50,7 @@ module TreeStand
     #   tree.root_node.query(<<~QUERY)
     #     (identifier) @identifier
     #   QUERY
-    #
-    # @param query_string [String]
-    # @return [Array<Hash<String, TreeStand::Node>>]
+    sig { params(query_string: String).returns(T::Array[T::Hash[String, TreeStand::Node]]) }
     def query(query_string)
       ts_query = TreeSitter::Query.new(@tree.parser.ts_language, query_string)
       ts_cursor = TreeSitter::QueryCursor.exec(ts_query, ts_node)
@@ -81,8 +76,7 @@ module TreeStand
     #
     # @see #find_node!
     # @see #query
-    # @param query_string [String]
-    # @return [TreeStand::Node, nil]
+    sig { params(query_string: String).returns(T.nilable(TreeStand::Node)) }
     def find_node(query_string)
       query(query_string).first&.values&.first
     end
@@ -91,14 +85,13 @@ module TreeStand
     # {TreeStand::NodeNotFound} error.
     #
     # @see #find_node
-    # @param query_string [String]
-    # @return [TreeStand::Node]
     # @raise [TreeStand::NodeNotFound]
+    sig { params(query_string: String).returns(TreeStand::Node) }
     def find_node!(query_string)
       find_node(query_string) || raise(TreeStand::NodeNotFound)
     end
 
-    # @return [TreeStand::Range]
+    sig { returns(TreeStand::Range) }
     def range
       TreeStand::Range.new(
         start_byte: @ts_node.start_byte,
@@ -137,32 +130,52 @@ module TreeStand
     # @example Check the subtree for error nodes
     #   node.walk.any? { |node| node.type == :error }
     #
-    # @yieldparam node [TreeStand::Node]
-    # @return [Enumerator]
-    #
     # @see TreeStand::Visitors::TreeWalker
+    #
+    # @yieldparam node [TreeStand::Node]
+    #
+    # @overload walk(&block)
+    #   @yieldparam node [TreeStand::Node]
+    #   @return [void]
+    #
+    # @overload walk
+    #   @return [Enumerator<TreeStand::Node>]
+    sig do
+      params(block: T.nilable(T.proc.params(node: TreeStand::Node).returns(BasicObject)))
+        .returns(T.any(T.untyped, T::Enumerator[TreeStand::Node]))
+    end
     def walk(&block)
-      Enumerator.new do |yielder|
+      enumerator = Enumerator.new do |yielder|
         Visitors::TreeWalker.new(self) do |child|
           yielder << child
         end.visit
-      end.each(&block)
+      end
+      return enumerator unless block_given?
+
+      enumerator.each(&block)
     end
 
     # @example
     #   node.text # => "4"
     #   node.parent.text # => "3 * 4"
     #   node.parent.parent.text # => "1 + 3 * 4"
-    # @return [TreeStand::Node]
+    sig { returns(TreeStand::Node) }
     def parent
       TreeStand::Node.new(@tree, @ts_node.parent)
     end
 
+    # @example
+    #   node.text # => "3 * 4"
+    #   node.to_a.map(&:text) # => ["3", "*", "4"]
+    #   node.children.map(&:text) # => ["3", "*", "4"]
+    sig { returns(T::Array[TreeStand::Node]) }
+    def children = to_a
+
     # A convience method for getting the text of the node. Each {TreeStand::Node}
     # wraps the parent {TreeStand::Tree #tree} and has access to the source document.
-    # @return [String]
+    sig { returns(String) }
     def text
-      @tree.document[@ts_node.start_byte...@ts_node.end_byte]
+      T.must(@tree.document[@ts_node.start_byte...@ts_node.end_byte])
     end
 
     # This class overrides the `method_missing` method to delegate to the
@@ -183,26 +196,21 @@ module TreeStand
     #   @raise [NoMethodError]
     def method_missing(method, *args, &block)
       return super unless @fields.include?(method.to_s)
-      TreeStand::Node.new(@tree, @ts_node.public_send(method, *args, &block))
+      TreeStand::Node.new(@tree, T.unsafe(@ts_node).public_send(method, *args, &block))
     end
 
-    # @param other [Object]
-    # @return [bool]
+    sig { params(other: Object).returns(T::Boolean) }
     def ==(other)
       return false unless other.is_a?(TreeStand::Node)
 
-      range == other.range &&
-        type == other.type &&
-        text == other.text
+      T.must(range == other.range && type == other.type && text == other.text)
     end
 
     # (see TreeStand::Utils::Printer)
     # Backed by {TreeStand::Utils::Printer}.
     #
-    # @param pp [PP]
-    # @return [void]
-    #
     # @see TreeStand::Utils::Printer
+    sig { params(pp: PP).void }
     def pretty_print(pp)
       Utils::Printer.new(ralign: 80).print(self, io: pp.output)
     end

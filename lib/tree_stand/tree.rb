@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+# typed: true
+
 module TreeStand
   # Wrapper around a TreeSitter tree.
   #
@@ -22,25 +25,29 @@ module TreeStand
   # This is not always possible and depends on the edits you make, beware that
   # the tree will be different after each edit and this approach may cause bugs.
   class Tree
+    extend T::Sig
     extend Forwardable
     include Enumerable
 
-    # @return [String]
+    sig { returns(String) }
     attr_reader :document
-    # @return [TreeSitter::Tree]
+    sig { returns(TreeSitter::Tree) }
     attr_reader :ts_tree
-    # @return [TreeStand::Parser]
+    sig { returns(TreeStand::Parser) }
     attr_reader :parser
 
     # @!method query(query_string)
+    #   (see TreeStand::Node#query)
     #   @note This is a convenience method that calls {TreeStand::Node#query} on
     #     {#root_node}.
     #
     # @!method find_node(query_string)
+    #   (see TreeStand::Node#find_node)
     #   @note This is a convenience method that calls {TreeStand::Node#find_node} on
     #     {#root_node}.
     #
     # @!method find_node!(query_string)
+    #   (see TreeStand::Node#find_node!)
     #   @note This is a convenience method that calls {TreeStand::Node#find_node!} on
     #     {#root_node}.
     #
@@ -69,13 +76,14 @@ module TreeStand
     alias_method :each, :walk
 
     # @api private
+    sig { params(parser: TreeStand::Parser, tree: TreeSitter::Tree, document: String).void }
     def initialize(parser, tree, document)
       @parser = parser
       @ts_tree = tree
       @document = document
     end
 
-    # @return [TreeStand::Node]
+    sig { returns(TreeStand::Node) }
     def root_node
       TreeStand::Node.new(self, @ts_tree.root_node)
     end
@@ -83,9 +91,7 @@ module TreeStand
     # This method replaces the section of the document specified by range and
     # replaces it with the provided text. Then it will reparse the document and
     # update the tree!
-    # @param range [TreeStand::Range]
-    # @param replacement [String]
-    # @return [void]
+    sig { params(range: TreeStand::Range, replacement: String).void }
     def edit!(range, replacement)
       new_document = +""
       new_document << @document[0...range.start_byte]
@@ -96,8 +102,7 @@ module TreeStand
 
     # This method deletes the section of the document specified by range. Then
     # it will reparse the document and update the tree!
-    # @param range [TreeStand::Range]
-    # @return [void]
+    sig { params(range: TreeStand::Range).void }
     def delete!(range)
       new_document = +""
       new_document << @document[0...range.start_byte]

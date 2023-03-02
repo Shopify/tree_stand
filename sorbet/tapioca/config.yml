@@ -1,0 +1,29 @@
+gem:
+  exclude:
+  - ansi
+  - ast
+  - builder
+  - byebug
+  - coderay
+  - diff-lcs
+  - method_source
+  - minitest
+  - minitest-focus
+  - minitest-reporters
+  - netrc
+  - parallel
+  - parser
+  - pry-byebug
+  - pry
+  - rake
+  - rbi
+  - ruby-progressbar
+  - spoom
+  - tapioca
+  - thor
+  - unparser
+  - webrick
+  - yard-sorbet
+  - yard
+  doc: false
+dsl:
