@@ -115,13 +115,19 @@ module TreeStand
     #   node.map(&:text) # => ["3", "*", "4"]
     #
     # @yieldparam child [TreeStand::Node]
-    # @return [Enumerator]
+    sig do
+      override
+        .params(block: T.nilable(T.proc.params(node: TreeStand::Node).returns(BasicObject)))
+        .returns(T::Enumerator[TreeStand::Node])
+    end
     def each(&block)
-      Enumerator.new do |yielder|
+      enumerator = Enumerator.new do |yielder|
         @ts_node.each do |child|
           yielder << TreeStand::Node.new(@tree, child)
         end
-      end.each(&block)
+      end
+      enumerator.each(&block) if block_given?
+      enumerator
     end
 
     # (see TreeStand::Visitors::TreeWalker)
@@ -133,16 +139,9 @@ module TreeStand
     # @see TreeStand::Visitors::TreeWalker
     #
     # @yieldparam node [TreeStand::Node]
-    #
-    # @overload walk(&block)
-    #   @yieldparam node [TreeStand::Node]
-    #   @return [void]
-    #
-    # @overload walk
-    #   @return [Enumerator<TreeStand::Node>]
     sig do
       params(block: T.nilable(T.proc.params(node: TreeStand::Node).returns(BasicObject)))
-        .returns(T.any(T.untyped, T::Enumerator[TreeStand::Node]))
+        .returns(T::Enumerator[TreeStand::Node])
     end
     def walk(&block)
       enumerator = Enumerator.new do |yielder|
@@ -150,9 +149,8 @@ module TreeStand
           yielder << child
         end.visit
       end
-      return enumerator unless block_given?
-
-      enumerator.each(&block)
+      enumerator.each(&block) if block_given?
+      enumerator
     end
 
     # @example
@@ -171,7 +169,7 @@ module TreeStand
     sig { returns(T::Array[TreeStand::Node]) }
     def children = to_a
 
-    # A convience method for getting the text of the node. Each {TreeStand::Node}
+    # A convenience method for getting the text of the node. Each {TreeStand::Node}
     # wraps the parent {TreeStand::Tree #tree} and has access to the source document.
     sig { returns(String) }
     def text
