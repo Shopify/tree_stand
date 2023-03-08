@@ -30,13 +30,13 @@ fn init() -> Result<()> {
     cparser.define_method("parse_string", method!(Parser::parse_string, 2))?;
 
     let ctree = mtree_sitter.define_class("Tree", Default::default())?;
-    ctree.define_method("root_node", method!(Tree::root_node, 1))?;
+    ctree.define_method("root_node", method!(Tree::root_node, 0))?;
 
     mtree_sitter.define_class("Node", Default::default())?;
 
     let cquery = mtree_sitter.define_class("Query", Default::default())?;
     cquery.define_singleton_method("new", function!(Query::new, 2))?;
-    cquery.define_method("exec", method!(Query::exec, 1))?;
+    // cquery.define_method("exec", method!(Query::exec, 1))?;
 
     mtree_sitter.define_class("Match", Default::default())?;
     mtree_sitter.define_class("Capture", Default::default())?;

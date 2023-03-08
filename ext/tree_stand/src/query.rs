@@ -1,6 +1,7 @@
 use tree_sitter;
 
-use crate::{error::Result, language::Language, node::Node, r#match::Match};
+// use crate::{error::Result, language::Language, node::Node, r#match::Match};
+use crate::{error::Result, language::Language, r#match::Match};
 
 #[magnus::wrap(class = "TreeSitter::Query", free_immediately, size)]
 pub struct Query {
@@ -14,17 +15,17 @@ impl Query {
         Ok(Self { ts_query })
     }
 
-    pub fn exec(&self, _node: &Node) -> Result<Vec<Match>> {
-        let matches = Vec::new();
-        // let mut cursor = tree_sitter::QueryCursor::new();
+    // pub fn exec(&self, _node: &Node) -> Result<Vec<Match>> {
+    //     let matches = Vec::new();
+    //     // let mut cursor = tree_sitter::QueryCursor::new();
 
-        // cursor.matches(self.ts_query, node.ts_node);
-        // let mut matches = Vec::new();
-        // let mut cursor = tree_sitter::QueryCursor::new();
-        // cursor.set_byte_range(node.range.start_byte, node.range.end_byte);
-        // while let Some(match_) = cursor.next_match(&self.ts_query, node.ts_node, |_, _| true) {
-        //     matches.push(QueryMatch::new(match_));
-        // }
-        Ok(matches)
-    }
+    //     // cursor.matches(self.ts_query, node.ts_node);
+    //     // let mut matches = Vec::new();
+    //     // let mut cursor = tree_sitter::QueryCursor::new();
+    //     // cursor.set_byte_range(node.range.start_byte, node.range.end_byte);
+    //     // while let Some(match_) = cursor.next_match(&self.ts_query, node.ts_node, |_, _| true) {
+    //     //     matches.push(QueryMatch::new(match_));
+    //     // }
+    //     Ok(matches)
+    // }
 }
