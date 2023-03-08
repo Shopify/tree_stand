@@ -1,38 +1,42 @@
-// use magnus::{TypedData, DataTypeFunctions, DataType, r_typed_data::DataTypeBuilder, memoize, RTypedData};
-// use tree_sitter;
+use magnus::{
+    typed_data::Obj,
+    DataTypeFunctions,
+    TypedData,
+    DataType,
+};
 
-// use crate::tree::Tree;
+use crate::tree::Tree;
 
-// TypedData can't be derived for generic types
-// #[magnus::wrap(class = "TreeSitter::Node", free_immediately, size)]
-// #[derive(DataTypeFunctions)]
-// pub struct Node<'tree> {
-//     tree: Tree,
-//     pub ts_node: Box<tree_sitter::Node<'tree>>,
-// }
+#[derive(DataTypeFunctions)]
+pub struct Node<'tree> {
+    pub tree: &'tree Tree,
+    pub ts_node: Box<tree_sitter::Node<'tree>>,
+}
 
-// // TypedData: Send + Sized,
-// unsafe impl Send for Node<'_> {}
+// TypedData: Send + Sized,
+unsafe impl Send for Node<'_> {}
 
-// impl Node<'_> {
-//     pub fn new(tree: Tree, ts_node: tree_sitter::Node) -> RTypedData {
-//         let node = Box::new(ts_node.clone());
-//         typed_data::Obj::wrap(
-//             Self {
-//                 tree,
-//                 ts_node: node,
-//             }
-//         )
-//     }
-// }
+impl<'tree> Node<'tree> {
+    pub fn new(tree: &'tree Tree, ts_node: Box<tree_sitter::Node<'tree>>) -> Obj<Self> {
+        Obj::wrap(Self { tree, ts_node })
+    }
+}
 
-// unsafe impl TypedData for Node<'_> {
-//     fn class() -> magnus::RClass {
-//         magnus::RClass::from_value(magnus::eval("TreeStand::Node").unwrap()).unwrap()
-//     }
+unsafe impl TypedData for Node<'_> {
+    fn class() -> magnus::RClass {
+        use magnus::{Class, RClass};
 
-//     fn data_type() -> &'static DataType {
-//         memoize!(DataType: DataTypeBuilder::<Node>::new("foo")
-//             .build())
-//     }
-// }
+        *magnus::memoize!(RClass: {
+            let class = magnus::RClass::from_value(magnus::eval("TreeSitter::Node").unwrap()).unwrap();
+            class.undef_alloc_func();
+            class
+        })
+    }
+
+    fn data_type() -> &'static DataType {
+        use magnus::typed_data::DataTypeBuilder;
+
+        magnus::memoize!(DataType: DataTypeBuilder::<Node>::new("ts-node")
+            .build())
+    }
+}

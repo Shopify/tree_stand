@@ -18,9 +18,9 @@ class ParserSetupTest < Minitest::Test
             left: (variable)
             right: (number))))
     QUERY
-    cursor = TreeSitter::QueryCursor.exec(query, tree.root_node)
+    matches = query.exec(tree.root_node)
 
-    refute_nil(cursor.next_match)
+    refute_predicate(matches, :empty?)
   end
 
   def test_can_parse_a_document_with_tree_stand_api

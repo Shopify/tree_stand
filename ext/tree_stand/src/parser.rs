@@ -23,7 +23,7 @@ impl Parser {
             None => parser.parse(&input, None),
         }.ok_or_else(|| ts_error!(format!("Failed to parse: {input:?}")))?;
 
-        Ok(Tree::new(ts_tree))
+        Ok(Tree::new(ts_tree, input))
     }
 
     pub fn set_language(&self, language: &Language) -> Result<()> {

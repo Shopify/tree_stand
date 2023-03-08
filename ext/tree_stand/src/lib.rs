@@ -36,7 +36,7 @@ fn init() -> Result<()> {
 
     let cquery = mtree_sitter.define_class("Query", Default::default())?;
     cquery.define_singleton_method("new", function!(Query::new, 2))?;
-    // cquery.define_method("exec", method!(Query::exec, 1))?;
+    cquery.define_method("exec", method!(Query::exec, 1))?;
 
     mtree_sitter.define_class("Match", Default::default())?;
     mtree_sitter.define_class("Capture", Default::default())?;

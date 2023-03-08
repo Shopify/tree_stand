@@ -1,25 +1,25 @@
-use tree_sitter;
+use magnus::typed_data::Obj;
 
-// use crate::node::Node;
+use crate::node::Node;
 
 #[magnus::wrap(class = "TreeSitter::Tree", free_immediately, size)]
 pub struct Tree {
     pub ts_tree: tree_sitter::Tree,
+    pub document: String,
 }
 
 impl Tree {
-    pub fn new(ts_tree: tree_sitter::Tree) -> Self {
+    pub fn new(ts_tree: tree_sitter::Tree, document: String) -> Self {
         Self {
             ts_tree,
+            document,
         }
     }
 
-    pub fn root_node(&self) {
-        // Node::new(self, self.ts_tree.root_node())
+    pub fn root_node(&self) -> Obj<Node> {
+        Node::new(
+            self,
+            Box::new(self.ts_tree.root_node()),
+        )
     }
-    // pub fn root_node(rb_self: RTypedData) -> RTypedData {
-    //     let tree = rb_self.try_convert::<Tree>().unwrap();
-    //     let node = Node::new(rb_self, tree.ts_tree.root_node());
-    //     RTypedData::wrap(node)
-    // }
 }
