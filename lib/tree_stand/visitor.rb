@@ -11,8 +11,8 @@ module TreeStand
   # - Hooks prefixed with `around_*` must `yield` to continue visiting child
   #   nodes.
   #
-  # You can also define an {_on_default} or {_around_default} method to call
-  # when visiting each node.
+  # You can also define default hooks by implementing an {on} or {around}
+  # method to call when visiting each node.
   #
   # @example Create a visitor counting certain nodes
   #   class CountingVisitor < TreeStand::Visitor
@@ -47,7 +47,7 @@ module TreeStand
   #       @stack = []
   #     end
   #
-  #     def _around_default(node)
+  #     def around(node)
   #       @stack << TreeNode.new(node.type, [])
   #
   #       # visit all children of this node
@@ -80,16 +80,16 @@ module TreeStand
     # @abstract The default implementation does nothing.
     #
     # @example Create callback to count all nodes in a tree.
-    #   def _on_default(node)
+    #   def on(node)
     #     @count += 1
     #   end
     sig { overridable.params(node: TreeStand::Node).void }
-    def _on_default(node) = nil
+    def on(node) = nil
 
     # @abstract The default implementation yields to visit all children.
     #
     # @example Use around hooks to run logic before & after visiting a node. Pairs will with a stack.
-    #   def _around_default(node)
+    #   def around(node)
     #     @stack << TreeNode.new(node.type, [])
     #
     #     # visit all children of this node
@@ -102,7 +102,7 @@ module TreeStand
     #     @stack[-2].children << @stack.pop
     #   end
     sig { overridable.params(node: TreeStand::Node, block: T.proc.void).void }
-    def _around_default(node, &block) = yield
+    def around(node, &block) = yield
 
     private
 
@@ -110,7 +110,7 @@ module TreeStand
       if respond_to?("on_#{node.type}")
         public_send("on_#{node.type}", node)
       else
-        _on_default(node)
+        on(node)
       end
 
       if respond_to?("around_#{node.type}")
@@ -118,7 +118,7 @@ module TreeStand
           node.each { |child| visit_node(child) }
         end
       else
-        _around_default(node) do
+        around(node) do
           node.each { |child| visit_node(child) }
         end
       end

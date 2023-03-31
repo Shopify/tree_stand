@@ -31,7 +31,7 @@ module TreeStand
       end
 
       sig { override.params(node: TreeStand::Node).void }
-      def _on_default(node) = @block.call(node)
+      def on(node) = @block.call(node)
     end
   end
 end
