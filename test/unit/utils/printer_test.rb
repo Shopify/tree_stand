@@ -24,6 +24,20 @@ module Utils
       SEXPR
     end
 
+    def test_printer_accepts_a_string
+      tree = @parser.parse_string(<<~MATH)
+        1 + x
+      MATH
+
+      assert_equal(<<~SEXPR, @printer.print(tree.root_node, io: +""))
+        (expression
+         (sum
+          left: (number)              | 1
+          ("+")                       | +
+          right: (variable)))         | x
+      SEXPR
+    end
+
     def test_pretty_printing_nodes
       tree = @parser.parse_string(<<~MATH)
         1 + x * 3 + 2 / 4 ** 8 - 9 * (10 - 11.1)
