@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 # typed: true
 
+require "forwardable"
 require "sorbet-runtime"
+require "stringio"
 require "tree_sitter"
 require "zeitwerk"
 

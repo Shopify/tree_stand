@@ -23,17 +23,17 @@ module TreeStand
       end
 
       # (see TreeStand::Utils::Printer)
-      sig { params(node: TreeStand::Node, io: T.any(IO, StringIO)).returns(T.any(IO, StringIO)) }
+      sig { params(node: TreeStand::Node, io: T.any(IO, StringIO, String)).returns(T.any(IO, StringIO, String)) }
       def print(node, io: StringIO.new)
         lines = pretty_output_lines(node)
 
         lines.each do |line|
           if line.text.empty?
-            io.puts line.sexpr
+            io << line.sexpr << "\n"
             next
           end
 
-          io.puts "#{line.sexpr}#{" " * (@ralign - line.sexpr.size)}| #{line.text}"
+          io << "#{line.sexpr}#{" " * (@ralign - line.sexpr.size)}| #{line.text}\n"
         end
 
         io

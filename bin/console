@@ -11,12 +11,12 @@ end
 
 ivars_to_add = <<~RUBY
   @parser = TreeStand::Parser.new("math")
-  @tree = @parser.parse_string(nil, "1 + x")
+  @tree = @parser.parse_string("1 + x")
 RUBY
 
 eval(ivars_to_add)
 puts("available ivars:")
 puts(ivars_to_add)
 
-require "pry"
-Pry.start
+require "irb"
+IRB.start(__FILE__)

@@ -1,6 +1,6 @@
 require "bundler/setup"
 require "tree_stand"
-require "pry-byebug" if ENV["PRY"]
+require "debug"
 require "minitest/autorun"
 require "minitest/focus"
 require "minitest/reporters"
