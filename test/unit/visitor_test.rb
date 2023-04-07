@@ -1,16 +1,16 @@
 require "test_helper"
 
-# Most of the visitor tests generate a tree from the the expression `1 + x * 3`.
+# Most of the visitor tests generate a tree from the the expression `1 * x + 3`.
 # The S-expression below serves as visual documentation for the generated tree.
 #
 # (expression
 #   (sum
-#     (number)
-#     ("+")
 #     (product
-#       (variable)
+#       (number)
 #       ("*")
-#       (number))))
+#       (variable))
+#     ("+")
+#     (number)))
 class VisitorTest < Minitest::Test
   def setup
     @parser = TreeStand::Parser.new("math")
@@ -18,7 +18,7 @@ class VisitorTest < Minitest::Test
 
   def test_default_on_hook
     tree = @parser.parse_string(<<~MATH)
-      1 + x * 3
+      1 * x + 3
     MATH
 
     acc = []
@@ -28,14 +28,14 @@ class VisitorTest < Minitest::Test
     visitor.visit
 
     assert_equal(
-      %i(expression sum number + product variable * number),
+      %i(expression sum product number * variable + number),
       acc,
     )
   end
 
   def test_custom_visitor_hooks
     tree = @parser.parse_string(<<~MATH)
-      1 + x * 3
+      1 * x + 3
     MATH
 
     acc = []
@@ -55,7 +55,7 @@ class VisitorTest < Minitest::Test
 
   def test_default_on_hook_doesnt_run_when_a_custom_hook_is_defined
     tree = @parser.parse_string(<<~MATH)
-      1 + x * 3
+      1 * x + 3
     MATH
 
     acc = []
@@ -66,14 +66,14 @@ class VisitorTest < Minitest::Test
     visitor.visit
 
     assert_equal(
-      %i(expression custom_sum number + product variable * number),
+      %i(expression custom_sum product number * variable + number),
       acc,
     )
   end
 
   def test_default_around_hook
     tree = @parser.parse_string(<<~MATH)
-      1 + x * 3
+      1 * x + 3
     MATH
 
     acc = []
@@ -91,18 +91,18 @@ class VisitorTest < Minitest::Test
       %w(
         before:expression
         before:sum
+        before:product
         before:number
         after:number
-        before:+
-        after:+
-        before:product
-        before:variable
-        after:variable
         before:*
         after:*
+        before:variable
+        after:variable
+        after:product
+        before:+
+        after:+
         before:number
         after:number
-        after:product
         after:sum
         after:expression
       ),
@@ -112,7 +112,7 @@ class VisitorTest < Minitest::Test
 
   def test_custom_around_hooks
     tree = @parser.parse_string(<<~MATH)
-      1 + x * 3
+      1 * x + 3
     MATH
 
     acc = []
@@ -145,7 +145,7 @@ class VisitorTest < Minitest::Test
 
   def test_around_hooks_traverse_children_only_when_yielding
     tree = @parser.parse_string(<<~MATH)
-      1 + x * 3
+      1 * x + 3
     MATH
 
     acc = []
@@ -156,14 +156,14 @@ class VisitorTest < Minitest::Test
     visitor.visit
 
     assert_equal(
-      %i(expression sum number + product),
+      %i(expression sum product + number),
       acc,
     )
   end
 
   def test_default_around_hook_doesnt_run_when_a_custom_hook_is_defined
     tree = @parser.parse_string(<<~MATH)
-      1 + x * 3
+      1 * x + 3
     MATH
 
     acc = []
