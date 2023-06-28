@@ -5,7 +5,7 @@ gemspec
 group :development, :test do
   gem "bundler", "~> 2.3"
   gem "rake", "~> 13.0"
-  gem "pry-byebug", "~> 3.10"
+  gem "debug"
   gem "rake-compiler"
   gem 'tapioca', "~> 0.11.1", require: false
   gem "yard", "~> 0.9.28"

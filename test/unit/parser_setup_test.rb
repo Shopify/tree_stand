@@ -10,7 +10,7 @@ class ParserSetupTest < Minitest::Test
       1 + x * 3
     MATH
 
-    query = TreeSitter::Query.new(parser.language, <<~QUERY)
+    query = TreeSitter::Query.new(tree, parser.language, <<~QUERY)
       (expression
         (sum
           left: (number)

@@ -4,14 +4,24 @@ use magnus::{
     DataType,
 };
 
+use crate::{capture::Capture, tree::Tree};
+
 #[derive(DataTypeFunctions)]
 pub struct Match<'cursor, 'tree> {
+    pub ts_tree: &'tree Tree,
     pub ts_match: tree_sitter::QueryMatch<'cursor, 'tree>,
 }
 
 impl<'cursor, 'tree> Match<'cursor, 'tree> {
-    pub fn new(ts_match: tree_sitter::QueryMatch<'cursor, 'tree>) -> Self {
-        Self { ts_match }
+    pub fn new(ts_tree: &'tree Tree, ts_match: tree_sitter::QueryMatch<'cursor, 'tree>) -> Self {
+        Self { ts_tree, ts_match }
+    }
+
+    pub fn captures(&self) -> Vec<Capture> {
+        self.ts_match.captures
+            .iter()
+            .map(|ts_capture| Capture::new(self.ts_tree, *ts_capture))
+            .collect()
     }
 }
 

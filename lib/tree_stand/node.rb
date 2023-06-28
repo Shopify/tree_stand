@@ -31,7 +31,7 @@ module TreeStand
     def initialize(tree, ts_node)
       @tree = tree
       @ts_node = ts_node
-      @fields = @ts_node.each_field.to_a.map(&:first)
+      @fields = @ts_node.fields
     end
 
     # TreeSitter uses a `TreeSitter::Cursor` to iterate over matches by calling
@@ -52,20 +52,19 @@ module TreeStand
     #   QUERY
     sig { params(query_string: String).returns(T::Array[T::Hash[String, TreeStand::Node]]) }
     def query(query_string)
-      ts_query = TreeSitter::Query.new(@tree.parser.ts_language, query_string)
-      ts_cursor = TreeSitter::QueryCursor.exec(ts_query, ts_node)
-      matches = []
-      while ts_match = ts_cursor.next_match
+      ts_query = TreeSitter::Query.new(@tree.ts_tree, @tree.parser.ts_language, query_string)
+      ts_matches = ts_query.exec(ts_node)
+
+      ts_matches.map do |ts_match|
         captures = {}
 
         ts_match.captures.each do |ts_capture|
-          capture_name = ts_query.capture_name_for_id(ts_capture.index)
+          capture_name = ts_query.capture_names[ts_capture.index]
           captures[capture_name] = TreeStand::Node.new(@tree, ts_capture.node)
         end
 
-        matches << captures
+        captures
       end
-      matches
     end
 
     # Returns the first captured node that matches the query string or nil if

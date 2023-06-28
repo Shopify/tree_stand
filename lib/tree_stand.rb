@@ -2,12 +2,11 @@
 # typed: true
 
 require "sorbet-runtime"
-# require "tree_sitter"
+require "tree_stand/tree_stand"
 require "zeitwerk"
 
-require "tree_stand/tree_stand"
-
 loader = Zeitwerk::Loader.for_gem
+loader.ignore("#{__dir__}/tree_sitter")
 loader.setup
 
 # TreeStand is a high-level Ruby wrapper for {https://tree-sitter.github.io/tree-sitter tree-sitter} bindings. It makes
