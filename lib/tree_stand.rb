@@ -3,6 +3,8 @@
 
 require "sorbet-runtime"
 require "tree_stand/tree_stand"
+require "tree_sitter/point"
+
 require "zeitwerk"
 
 loader = Zeitwerk::Loader.for_gem

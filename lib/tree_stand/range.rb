@@ -6,21 +6,13 @@ module TreeStand
   class Range
     extend T::Sig
 
-    # Point is a Struct containing the row and column from a TreeSitter point.
-    # TreeStand uses this to compare points.
-    # @!attribute [rw] row
-    #   @return [Integer]
-    # @!attribute [rw] column
-    #   @return [Integer]
-    Point = Struct.new(:row, :column)
-
     sig { returns(Integer) }
     attr_reader :start_byte
     sig { returns(Integer) }
     attr_reader :end_byte
-    sig { returns(TreeStand::Range::Point) }
+    sig { returns(TreeSitter::Point) }
     attr_reader  :start_point
-    sig { returns(TreeStand::Range::Point) }
+    sig { returns(TreeSitter::Point) }
     attr_reader  :end_point
 
     # @api private
@@ -28,15 +20,15 @@ module TreeStand
       params(
         start_byte: Integer,
         end_byte: Integer,
-        start_point: T.any(TreeStand::Range::Point, TreeSitter::Point),
-        end_point: T.any(TreeStand::Range::Point, TreeSitter::Point),
+        start_point: TreeSitter::Point,
+        end_point: TreeSitter::Point,
       ).void
     end
     def initialize(start_byte:, end_byte:, start_point:, end_point:)
       @start_byte = start_byte
       @end_byte = end_byte
-      @start_point = Point.new(start_point.row, start_point.column)
-      @end_point = Point.new(end_point.row, end_point.column)
+      @start_point = start_point
+      @end_point = end_point
     end
 
     sig { params(other: Object).returns(T::Boolean) }

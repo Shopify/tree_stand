@@ -40,6 +40,13 @@ fn init() -> Result<()> {
     cnode.define_method("type", method!(Node::get_type, 0))?;
     cnode.define_method("error?", method!(Node::is_error, 0))?;
     cnode.define_method("each", method!(Node::each, 0))?;
+    cnode.define_method("field_name_for_child", method!(Node::field_name_for_child, 1))?;
+    cnode.define_method("child_count", method!(Node::child_count, 0))?;
+    cnode.define_method("to_s", method!(Node::to_s, 0))?;
+    cnode.define_method("start_byte", method!(Node::start_byte, 0))?;
+    cnode.define_method("end_byte", method!(Node::end_byte, 0))?;
+    cnode.define_method("start_point", method!(Node::start_point, 0))?;
+    cnode.define_method("end_point", method!(Node::end_point, 0))?;
 
     let cquery = mtree_sitter.define_class("Query", Default::default())?;
     cquery.define_singleton_method("new", function!(Query::new, 3))?;

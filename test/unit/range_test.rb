@@ -14,8 +14,8 @@ class RangeTest < Minitest::Test
     range = TreeStand::Range.new(
       start_byte: 0,
       end_byte: document.length,
-      start_point: TreeStand::Range::Point.new(0, 0),
-      end_point: TreeStand::Range::Point.new(1, 0),
+      start_point: TreeSitter::Point.new(0, 0),
+      end_point: TreeSitter::Point.new(1, 0),
     )
 
     assert_equal(tree.root_node.range, range)
