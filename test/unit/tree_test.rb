@@ -11,6 +11,7 @@ class TreeTest < Minitest::Test
     assert_equal(document, tree.document)
   end
 
+  focus
   def test_can_replace_text
     tree = @parser.parse_string(<<~MATH)
       1 + x * 3 + 2

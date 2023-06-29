@@ -31,6 +31,7 @@ module TreeStand
     def initialize(tree, ts_node)
       @tree = tree
       @ts_node = ts_node
+      binding.b
       @fields = @ts_node.fields
     end
 

@@ -7,6 +7,7 @@ mod parser;
 mod tree;
 mod node;
 mod query;
+mod cursor;
 mod r#match;
 mod capture;
 
@@ -50,8 +51,8 @@ fn init() -> Result<()> {
 
     let cquery = mtree_sitter.define_class("Query", Default::default())?;
     cquery.define_singleton_method("new", function!(Query::new, 3))?;
-    cquery.define_method("exec", method!(Query::exec, 1))?;
     cquery.define_method("capture_names", method!(Query::capture_names, 0))?;
+    cquery.define_method("exec", method!(Query::exec, 1))?;
 
     let cmatch = mtree_sitter.define_class("Match", Default::default())?;
     cmatch.define_method("captures", method!(Match::captures, 0))?;

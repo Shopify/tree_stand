@@ -1,8 +1,7 @@
 use magnus::{
-    RArray,
     DataTypeFunctions,
     TypedData,
-    DataType,
+    DataType, block::{Yield, block_given},
 };
 use tree_sitter;
 
@@ -25,19 +24,21 @@ impl<'tree> Query<'tree> {
         self.ts_query.capture_names().to_vec()
     }
 
-    pub fn exec(&self, node: &Node) -> Result<RArray> {
-        // let matches = Vec::new();
-        // let mut cursor = tree_sitter::QueryCursor::new();
+    pub fn capture_index_for_name(&self, name: String) -> Option<u32> {
+        self.ts_query.capture_index_for_name(&name)
+    }
 
-        // cursor.matches(self.ts_query, node.ts_node);
-        let mut matches = Vec::<Match>::new();
-        let mut cursor = tree_sitter::QueryCursor::new();
-        // cursor.set_byte_range(node.range().start_byte..node.range().end_byte);
-        let query_matches = cursor.matches(&self.ts_query, *node.ts_node, node.tree.document.as_bytes());
-        for m in query_matches {
-            matches.push(Match::new(self.ts_tree, m));
-        };
-        Ok(RArray::from_vec(matches))
+    pub fn exec(&self, node: &'tree Node) -> Yield<impl Iterator<Item = Match>> {
+        let mut ts_cursor = tree_sitter::QueryCursor::new();
+        let items = ts_cursor
+            .matches(&self.ts_query, *node.ts_node, node.tree.document.as_bytes())
+            .map(|m| Match::new(self.ts_tree, m));
+
+        if block_given() {
+            Yield::Iter(items.into_iter())
+        } else {
+            panic!("no block given to Query#exec")
+        }
     }
 }
 
