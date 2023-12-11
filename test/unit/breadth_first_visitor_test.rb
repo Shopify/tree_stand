@@ -11,7 +11,7 @@ require "test_helper"
 #       (variable))
 #     ("+")
 #     (number)))
-class VisitorTest < Minitest::Test
+class BreadthFirstVisitorTest < Minitest::Test
   def setup
     @parser = TreeStand::Parser.new("math")
   end
@@ -23,12 +23,12 @@ class VisitorTest < Minitest::Test
 
     acc = []
 
-    visitor = TreeStand::Visitor.new(tree.root_node)
+    visitor = TreeStand::BreadthFirstVisitor.new(tree.root_node)
     visitor.define_singleton_method(:on) { |node| acc << node.type }
     visitor.visit
 
     assert_equal(
-      %i(expression sum product number * variable + number),
+      %i(expression sum product + number number * variable),
       acc,
     )
   end
@@ -41,7 +41,7 @@ class VisitorTest < Minitest::Test
     acc = []
 
     method = ->(node) { acc << node.type }
-    visitor = TreeStand::Visitor.new(tree.root_node)
+    visitor = TreeStand::BreadthFirstVisitor.new(tree.root_node)
     visitor.define_singleton_method(:on_sum, method)
     visitor.define_singleton_method(:on_number, method)
     visitor.define_singleton_method(:on_expression, method)
@@ -60,13 +60,13 @@ class VisitorTest < Minitest::Test
 
     acc = []
 
-    visitor = TreeStand::Visitor.new(tree.root_node)
+    visitor = TreeStand::BreadthFirstVisitor.new(tree.root_node)
     visitor.define_singleton_method(:on) { |node| acc << node.type }
     visitor.define_singleton_method(:on_sum) { |node| acc << :custom_sum }
     visitor.visit
 
     assert_equal(
-      %i(expression custom_sum product number * variable + number),
+      %i(expression custom_sum product + number number * variable),
       acc,
     )
   end
@@ -83,28 +83,28 @@ class VisitorTest < Minitest::Test
       block.call
       acc << "after:#{node.type}"
     end
-    visitor = TreeStand::Visitor.new(tree.root_node)
+    visitor = TreeStand::BreadthFirstVisitor.new(tree.root_node)
     visitor.define_singleton_method(:around, method)
     visitor.visit
 
     assert_equal(
       %w(
         before:expression
+        after:expression
         before:sum
+        after:sum
         before:product
+        after:product
+        before:+
+        after:+
+        before:number
+        after:number
         before:number
         after:number
         before:*
         after:*
         before:variable
         after:variable
-        after:product
-        before:+
-        after:+
-        before:number
-        after:number
-        after:sum
-        after:expression
       ),
       acc,
     )
@@ -122,7 +122,7 @@ class VisitorTest < Minitest::Test
       block.call
       acc << "after:#{node.type}"
     end
-    visitor = TreeStand::Visitor.new(tree.root_node)
+    visitor = TreeStand::BreadthFirstVisitor.new(tree.root_node)
     visitor.define_singleton_method(:around_sum, method)
     visitor.define_singleton_method(:around_number, method)
     visitor.define_singleton_method(:around_expression, method)
@@ -131,13 +131,13 @@ class VisitorTest < Minitest::Test
     assert_equal(
       %w(
         before:expression
-        before:sum
-        before:number
-        after:number
-        before:number
-        after:number
-        after:sum
         after:expression
+        before:sum
+        after:sum
+        before:number
+        after:number
+        before:number
+        after:number
       ),
       acc,
     )
@@ -150,7 +150,7 @@ class VisitorTest < Minitest::Test
 
     acc = []
 
-    visitor = TreeStand::Visitor.new(tree.root_node)
+    visitor = TreeStand::BreadthFirstVisitor.new(tree.root_node)
     visitor.define_singleton_method(:on) { |node| acc << node.type }
     visitor.define_singleton_method(:around_product) { |node, &block| }
     visitor.visit
@@ -173,7 +173,7 @@ class VisitorTest < Minitest::Test
       block.call
       acc << "after:#{node.type}"
     end
-    visitor = TreeStand::Visitor.new(tree.root_node)
+    visitor = TreeStand::BreadthFirstVisitor.new(tree.root_node)
     visitor.define_singleton_method(:around, method)
     visitor.define_singleton_method(:around_sum) { |node| acc << "around:sum" }
     visitor.visit
@@ -181,8 +181,8 @@ class VisitorTest < Minitest::Test
     assert_equal(
       %w(
         before:expression
-        around:sum
         after:expression
+        around:sum
       ),
       acc,
     )
