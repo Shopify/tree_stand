@@ -2,6 +2,7 @@
 
 [![TreeStand](https://github.com/Shopify/tree_stand/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Shopify/tree_stand/actions/workflows/ci.yml)
 
+NOTE: TreeStand has been vendored in [ruby-tree-sitter](https://github.com/Faveod/ruby-tree-sitter) see https://github.com/Faveod/ruby-tree-sitter for latest releases.
 
 TreeStand is a high-level Ruby wrapper for the [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) bindings. It
 makes it easier to configure the parsers, and work with the underlying syntax tree.
@@ -11,10 +12,10 @@ makes it easier to configure the parsers, and work with the underlying syntax tr
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "tree_stand"
+gem "ruby_tree_sitter"
 ```
 
-See the [documentation](https://shopify.github.io/tree_stand) for supported features.
+See the [documentation](https://faveod.github.io/ruby-tree-sitter/) for supported features.
 
 ## Usage
 
@@ -46,9 +47,9 @@ The underlying objects are accessible via a `ts_` prefixed attribute, e.g. `ts_p
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/Shopify/tree_stand. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/Faveod/ruby-tree-sitter. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
-See [CONTRIBUTING.md](https://github.com/Shopify/tree_stand/blob/main/CONTRIBUTING.md) for documentation on how to set up the project for development.
+See [CONTRIBUTING.md](https://github.com/Faveod/ruby-tree-sitter/blob/master/docs/Contributing.md) for documentation on how to set up the project for development.
 
 ## License
 
