@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Class: TreeStand::Tree
+  
+    &mdash; Documentation by YARD 0.9.36
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "TreeStand::Tree";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (T)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../TreeStand.html" title="TreeStand (module)">TreeStand</a></span></span>
+     &raquo; 
+    <span class="title">Tree</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Class: TreeStand::Tree
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+  <dl>
+    <dt>Inherits:</dt>
+    <dd>
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">TreeStand::Tree</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+    </dd>
+  </dl>
+  
+
+  
+  
+  <dl>
+      <dt>Extended by:</dt>
+      <dd>Forwardable, T::Sig</dd>
+  </dl>
+  
+  
+  
+  <dl>
+      <dt>Includes:</dt>
+      <dd>Enumerable</dd>
+  </dl>
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/tree_stand/tree.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Wrapper around a TreeSitter tree.</p>
+
+<p>This class exposes a convient API for working with the tree. There are dangers in using this class. The tree is mutable and the document can be changed. This class does not protect against that.</p>
+
+<p>Some of the moetods on this class edit and re-parse the document updating the tree. Because the document is re-parsed, the tree will be different. Which means all outstanding nodes &amp; ranges will be invalid.</p>
+
+<p>Methods that edit the document are suffixed with ‘!`, e.g. `#edit!`.</p>
+
+<p>It’s often the case that you will want perfrom multiple edits. One such pattern is to call #query &amp; #edit on all matches in a loop. It’s important to keep the destructive nature of #edit in mind and re-issue the query after each edit.</p>
+
+<p>Another thing to keep in mind is that edits done later in the document will likely not affect the ranges that occur earlier in the document. This can be a convient property that could allow you to apply edits in a reverse order. This is not always possible and depends on the edits you make, beware that the tree will be different after each edit and this approach may cause bugs.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+  <h2>Instance Attribute Summary <small><a href="#" class="summary_toggle">collapse</a></small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#document-instance_method" title="#document (instance method)">#<strong>document</strong>  &#x21d2; String </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parser-instance_method" title="#parser (instance method)">#<strong>parser</strong>  &#x21d2; TreeStand::Parser </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ts_tree-instance_method" title="#ts_tree (instance method)">#<strong>ts_tree</strong>  &#x21d2; TreeSitter::Tree </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#delete!-instance_method" title="#delete! (instance method)">#<strong>delete!</strong>(range)  &#x21d2; void </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method deletes the section of the document specified by range.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#edit!-instance_method" title="#edit! (instance method)">#<strong>edit!</strong>(range, replacement)  &#x21d2; void </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method replaces the section of the document specified by range and replaces it with the provided text.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_node-instance_method" title="#find_node (instance method)">#<strong>find_node</strong>(query_string)  &#x21d2; TreeStand::Node<sup>?</sup> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the first captured node that matches the query string or nil if there was no captured node.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_node!-instance_method" title="#find_node! (instance method)">#<strong>find_node!</strong>(query_string)  &#x21d2; TreeStand::Node </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Like <span class='object_link'><a href="#find_node-instance_method" title="TreeStand::Tree#find_node (method)">#find_node</a></span>, except that if no node is found, raises an <span class='object_link'><a href="NodeNotFound.html" title="TreeStand::NodeNotFound (class)">NodeNotFound</a></span> error.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(parser, tree, document)  &#x21d2; void </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#query-instance_method" title="#query (instance method)">#<strong>query</strong>(query_string)  &#x21d2; Array&lt;Hash{String =&gt; TreeStand::Node}&gt; </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>TreeSitter uses a ‘TreeSitter::Cursor` to iterate over matches by calling `curser#next_match` repeatedly until it returns `nil`.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#root_node-instance_method" title="#root_node (instance method)">#<strong>root_node</strong>  &#x21d2; TreeStand::Node </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#text-instance_method" title="#text (instance method)">#<strong>text</strong>  &#x21d2; String </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>A convenience method for getting the text of the node.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#walk-instance_method" title="#walk (instance method)">#<strong>walk</strong>(&amp;block) {|node| ... } &#x21d2; T::Enumerator[TreeStand::Node] </a>
+    
+
+    
+      (also: #each)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Backed by <span class='object_link'><a href="Visitors/TreeWalker.html" title="TreeStand::Visitors::TreeWalker (class)">Visitors::TreeWalker</a></span>.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    #<strong>initialize</strong>(parser, tree, document)  &#x21d2; <tt>void</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>parser</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Parser.html" title="TreeStand::Parser (class)">TreeStand::Parser</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>tree</span>
+      
+      
+        <span class='type'>(<tt>TreeSitter::Tree</tt>)</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>document</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+80
+81
+82
+83
+84</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 80</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_parser'>parser</span><span class='comma'>,</span> <span class='id identifier rubyid_tree'>tree</span><span class='comma'>,</span> <span class='id identifier rubyid_document'>document</span><span class='rparen'>)</span>
+  <span class='ivar'>@parser</span> <span class='op'>=</span> <span class='id identifier rubyid_parser'>parser</span>
+  <span class='ivar'>@ts_tree</span> <span class='op'>=</span> <span class='id identifier rubyid_tree'>tree</span>
+  <span class='ivar'>@document</span> <span class='op'>=</span> <span class='id identifier rubyid_document'>document</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="document-instance_method">
+  
+    #<strong>document</strong>  &#x21d2; <tt>String</tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+33
+34
+35</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 33</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_document'>document</span>
+  <span class='ivar'>@document</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="parser-instance_method">
+  
+    #<strong>parser</strong>  &#x21d2; <tt><span class='object_link'><a href="Parser.html" title="TreeStand::Parser (class)">TreeStand::Parser</a></span></tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Parser.html" title="TreeStand::Parser (class)">TreeStand::Parser</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+37
+38
+39</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 37</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_parser'>parser</span>
+  <span class='ivar'>@parser</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="ts_tree-instance_method">
+  
+    #<strong>ts_tree</strong>  &#x21d2; <tt>TreeSitter::Tree</tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>TreeSitter::Tree</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+35
+36
+37</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 35</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_ts_tree'>ts_tree</span>
+  <span class='ivar'>@ts_tree</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="delete!-instance_method">
+  
+    #<strong>delete!</strong>(range)  &#x21d2; <tt>void</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p>
+<p>This method deletes the section of the document specified by range. Then it will reparse the document and update the tree!</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>range</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Range.html" title="TreeStand::Range (class)">TreeStand::Range</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+106
+107
+108
+109
+110
+111</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 106</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_delete!'>delete!</span><span class='lparen'>(</span><span class='id identifier rubyid_range'>range</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_new_document'>new_document</span> <span class='op'>=</span> <span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_new_document'>new_document</span> <span class='op'>&lt;&lt;</span> <span class='ivar'>@document</span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>...</span><span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_start_byte'>start_byte</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_new_document'>new_document</span> <span class='op'>&lt;&lt;</span> <span class='ivar'>@document</span><span class='lbracket'>[</span><span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_end_byte'>end_byte</span><span class='op'>..</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_replace_with_new_doc'>replace_with_new_doc</span><span class='lparen'>(</span><span class='id identifier rubyid_new_document'>new_document</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="edit!-instance_method">
+  
+    #<strong>edit!</strong>(range, replacement)  &#x21d2; <tt>void</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p>
+<p>This method replaces the section of the document specified by range and replaces it with the provided text. Then it will reparse the document and update the tree!</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>range</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Range.html" title="TreeStand::Range (class)">TreeStand::Range</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>replacement</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+95
+96
+97
+98
+99
+100
+101</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 95</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_edit!'>edit!</span><span class='lparen'>(</span><span class='id identifier rubyid_range'>range</span><span class='comma'>,</span> <span class='id identifier rubyid_replacement'>replacement</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_new_document'>new_document</span> <span class='op'>=</span> <span class='op'>+</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_new_document'>new_document</span> <span class='op'>&lt;&lt;</span> <span class='ivar'>@document</span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>...</span><span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_start_byte'>start_byte</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_new_document'>new_document</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_replacement'>replacement</span>
+  <span class='id identifier rubyid_new_document'>new_document</span> <span class='op'>&lt;&lt;</span> <span class='ivar'>@document</span><span class='lbracket'>[</span><span class='id identifier rubyid_range'>range</span><span class='period'>.</span><span class='id identifier rubyid_end_byte'>end_byte</span><span class='op'>..</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_replace_with_new_doc'>replace_with_new_doc</span><span class='lparen'>(</span><span class='id identifier rubyid_new_document'>new_document</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="find_node-instance_method">
+  
+    #<strong>find_node</strong>(query_string)  &#x21d2; <tt><span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span></tt><sup>?</sup> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This is a convenience method that calls <span class='object_link'><a href="Node.html#find_node-instance_method" title="TreeStand::Node#find_node (method)">Node#find_node</a></span> on <span class='object_link'><a href="#root_node-instance_method" title="TreeStand::Tree#root_node (method)">#root_node</a></span>.</p>
+</div>
+  </div>
+
+
+<p>Returns the first captured node that matches the query string or nil if there was no captured node.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Find the first identifier node.</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='id identifier rubyid_identifier_node'>identifier_node</span> <span class='op'>=</span> <span class='id identifier rubyid_tree'>tree</span><span class='period'>.</span><span class='id identifier rubyid_root_node'>root_node</span><span class='period'>.</span><span class='id identifier rubyid_find_node'>find_node</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>(identifier) @identifier</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>query_string</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#find_node!-instance_method" title="TreeStand::Tree#find_node! (method)">#find_node!</a></span></li>
+    
+      <li><span class='object_link'><a href="#query-instance_method" title="TreeStand::Tree#query (method)">#query</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+67
+68
+69
+70
+71
+72
+73
+74</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 67</span>
+
+<span class='id identifier rubyid_def_delegators'>def_delegators</span><span class='lparen'>(</span>
+  <span class='symbol'>:root_node</span><span class='comma'>,</span>
+  <span class='symbol'>:query</span><span class='comma'>,</span>
+  <span class='symbol'>:find_node</span><span class='comma'>,</span>
+  <span class='symbol'>:find_node!</span><span class='comma'>,</span>
+  <span class='symbol'>:walk</span><span class='comma'>,</span>
+  <span class='symbol'>:text</span><span class='comma'>,</span>
+<span class='rparen'>)</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="find_node!-instance_method">
+  
+    #<strong>find_node!</strong>(query_string)  &#x21d2; <tt><span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This is a convenience method that calls <span class='object_link'><a href="Node.html#find_node!-instance_method" title="TreeStand::Node#find_node! (method)">Node#find_node!</a></span> on <span class='object_link'><a href="#root_node-instance_method" title="TreeStand::Tree#root_node (method)">#root_node</a></span>.</p>
+</div>
+  </div>
+
+
+<p>Like <span class='object_link'><a href="#find_node-instance_method" title="TreeStand::Tree#find_node (method)">#find_node</a></span>, except that if no node is found, raises an <span class='object_link'><a href="NodeNotFound.html" title="TreeStand::NodeNotFound (class)">NodeNotFound</a></span> error.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>query_string</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="NodeNotFound.html" title="TreeStand::NodeNotFound (class)">TreeStand::NodeNotFound</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#find_node-instance_method" title="TreeStand::Tree#find_node (method)">#find_node</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+67
+68
+69
+70
+71
+72
+73
+74</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 67</span>
+
+<span class='id identifier rubyid_def_delegators'>def_delegators</span><span class='lparen'>(</span>
+  <span class='symbol'>:root_node</span><span class='comma'>,</span>
+  <span class='symbol'>:query</span><span class='comma'>,</span>
+  <span class='symbol'>:find_node</span><span class='comma'>,</span>
+  <span class='symbol'>:find_node!</span><span class='comma'>,</span>
+  <span class='symbol'>:walk</span><span class='comma'>,</span>
+  <span class='symbol'>:text</span><span class='comma'>,</span>
+<span class='rparen'>)</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="query-instance_method">
+  
+    #<strong>query</strong>(query_string)  &#x21d2; <tt>Array&lt;Hash{String =&gt; <span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span>}&gt;</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This is a convenience method that calls <span class='object_link'><a href="Node.html#query-instance_method" title="TreeStand::Node#query (method)">Node#query</a></span> on <span class='object_link'><a href="#root_node-instance_method" title="TreeStand::Tree#root_node (method)">#root_node</a></span>.</p>
+</div>
+  </div>
+
+
+<p>TreeSitter uses a ‘TreeSitter::Cursor` to iterate over matches by calling `curser#next_match` repeatedly until it returns `nil`.</p>
+
+<p>This method does all of that for you and collects all of the matches into an array and each corresponding capture into a hash.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code><span class='comment'># This will return a match for each identifier nodes in the tree.
+</span><span class='id identifier rubyid_tree_matches'>tree_matches</span> <span class='op'>=</span> <span class='id identifier rubyid_tree'>tree</span><span class='period'>.</span><span class='id identifier rubyid_query'>query</span><span class='lparen'>(</span><span class='heredoc_beg'>&lt;&lt;~QUERY</span><span class='rparen'>)</span>
+<span class='tstring_content'>  (identifier) @identifier
+</span><span class='heredoc_end'>QUERY
+</span>
+<span class='comment'># It is equivalent to:
+</span><span class='id identifier rubyid_tree'>tree</span><span class='period'>.</span><span class='id identifier rubyid_root_node'>root_node</span><span class='period'>.</span><span class='id identifier rubyid_query'>query</span><span class='lparen'>(</span><span class='heredoc_beg'>&lt;&lt;~QUERY</span><span class='rparen'>)</span>
+<span class='tstring_content'>  (identifier) @identifier
+</span><span class='heredoc_end'>QUERY</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>query_string</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;Hash{String =&gt; <span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span>}&gt;</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+67
+68
+69
+70
+71
+72
+73
+74</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 67</span>
+
+<span class='id identifier rubyid_def_delegators'>def_delegators</span><span class='lparen'>(</span>
+  <span class='symbol'>:root_node</span><span class='comma'>,</span>
+  <span class='symbol'>:query</span><span class='comma'>,</span>
+  <span class='symbol'>:find_node</span><span class='comma'>,</span>
+  <span class='symbol'>:find_node!</span><span class='comma'>,</span>
+  <span class='symbol'>:walk</span><span class='comma'>,</span>
+  <span class='symbol'>:text</span><span class='comma'>,</span>
+<span class='rparen'>)</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="root_node-instance_method">
+  
+    #<strong>root_node</strong>  &#x21d2; <tt><span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+87
+88
+89</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 87</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_root_node'>root_node</span>
+  <span class='const'><span class='object_link'><a href="../TreeStand.html" title="TreeStand (module)">TreeStand</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">Node</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Node.html#initialize-instance_method" title="TreeStand::Node#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='ivar'>@ts_tree</span><span class='period'>.</span><span class='id identifier rubyid_root_node'>root_node</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="text-instance_method">
+  
+    #<strong>text</strong>  &#x21d2; <tt>String</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This is a convenience method that calls <span class='object_link'><a href="Node.html#text-instance_method" title="TreeStand::Node#text (method)">Node#text</a></span> on <span class='object_link'><a href="#root_node-instance_method" title="TreeStand::Tree#root_node (method)">#root_node</a></span>.</p>
+</div>
+  </div>
+
+
+<p>A convenience method for getting the text of the node. Each <span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">Node</a></span> wraps the parent <span class='object_link'><a href="" title="TreeStand::Tree (class)">#tree</a></span> and has access to the source document.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+67
+68
+69
+70
+71
+72
+73
+74</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 67</span>
+
+<span class='id identifier rubyid_def_delegators'>def_delegators</span><span class='lparen'>(</span>
+  <span class='symbol'>:root_node</span><span class='comma'>,</span>
+  <span class='symbol'>:query</span><span class='comma'>,</span>
+  <span class='symbol'>:find_node</span><span class='comma'>,</span>
+  <span class='symbol'>:find_node!</span><span class='comma'>,</span>
+  <span class='symbol'>:walk</span><span class='comma'>,</span>
+  <span class='symbol'>:text</span><span class='comma'>,</span>
+<span class='rparen'>)</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="walk-instance_method">
+  
+    #<strong>walk</strong>(&amp;block) {|node| ... } &#x21d2; <tt>T::Enumerator[<span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span>]</tt> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='each-instance_method'>each</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This is a convenience method that calls <span class='object_link'><a href="Node.html#walk-instance_method" title="TreeStand::Node#walk (method)">Node#walk</a></span> on <span class='object_link'><a href="#root_node-instance_method" title="TreeStand::Tree#root_node (method)">#root_node</a></span>.</p>
+</div>
+  </div>
+
+
+<p>Backed by <span class='object_link'><a href="Visitors/TreeWalker.html" title="TreeStand::Visitors::TreeWalker (class)">Visitors::TreeWalker</a></span>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Check the subtree for error nodes</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_walk'>walk</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_node'>node</span><span class='op'>|</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:error</span> <span class='rbrace'>}</span></code></pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Tree includes Enumerable</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='id identifier rubyid_tree'>tree</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_node'>node</span><span class='op'>|</span> <span class='id identifier rubyid_node'>node</span><span class='period'>.</span><span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='symbol'>:error</span> <span class='rbrace'>}</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>block</span>
+      
+      
+        <span class='type'>(<tt>T.proc.params(node: <span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span>).returns(BasicObject)</tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>node</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>T::Enumerator[<span class='object_link'><a href="Node.html" title="TreeStand::Node (class)">TreeStand::Node</a></span>]</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Visitors/TreeWalker.html" title="TreeStand::Visitors::TreeWalker (class)">Visitors::TreeWalker</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+67
+68
+69
+70
+71
+72
+73
+74</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/tree_stand/tree.rb', line 67</span>
+
+<span class='id identifier rubyid_def_delegators'>def_delegators</span><span class='lparen'>(</span>
+  <span class='symbol'>:root_node</span><span class='comma'>,</span>
+  <span class='symbol'>:query</span><span class='comma'>,</span>
+  <span class='symbol'>:find_node</span><span class='comma'>,</span>
+  <span class='symbol'>:find_node!</span><span class='comma'>,</span>
+  <span class='symbol'>:walk</span><span class='comma'>,</span>
+  <span class='symbol'>:text</span><span class='comma'>,</span>
+<span class='rparen'>)</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Thu Mar 28 13:39:46 2024 by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.36 (ruby-3.1.1).
+</div>
+
+    </div>
+  </body>
+</html>
